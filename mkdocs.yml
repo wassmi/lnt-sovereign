@@ -1,0 +1,18 @@
+site_name: LNT Documentation
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: indigo
+  features:
+    - navigation.tabs
+    - search.highlight
+
+nav:
+  - Home: index.md
+  - Technical Whitepaper: whitepaper.md
+  - API Reference: api_reference.md
+  - System Architecture: architecture.md
+  - Integration Guide: integration.md
+  - Validation Standards: specifications.md
+  - Engineering Records (ADRs): adr_001.md
