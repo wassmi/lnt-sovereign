@@ -1,0 +1,34 @@
+site_name: LNT Sovereign Grade
+site_description: High-performance Neuro-Symbolic Verification for the AI Age.
+theme:
+  name: material
+  palette:
+    primary: deep purple
+    accent: purple
+  features:
+    - navigation.sections
+    - navigation.expand
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - White Paper: whitepaper.md
+  - Architecture: architecture.md
+  - Sovereign Grade (SG-1/2): sovereign.md
+  - API Reference: api.md
+  - 10k Rule Registry: registry.md
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [.]
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets

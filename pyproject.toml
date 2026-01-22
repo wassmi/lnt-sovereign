@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lnt-sovereign"
+version = "1.0.0"
+authors = [
+  { name="Deepmind Agentic Coding Team", email="pro@lnt-sovereign.xyz" },
+]
+description = "A high-performance Neuro-Symbolic Verification Layer for Sovereign Grade AI."
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Security :: Cryptography"
+]
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "pydantic>=2.0",
+    "numpy",
+    "numba",
+    "sqlalchemy",
+    "httpx",
+    "z3-solver"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/sovereign-ai/lnt-sovereign"
+"Bug Tracker" = "https://github.com/sovereign-ai/lnt-sovereign/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["lnt_sovereign*"]
