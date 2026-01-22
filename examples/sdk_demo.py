@@ -1,5 +1,5 @@
 import asyncio
-from lnt_sdk import LNTClient
+from lnt_sovereign.client import LNTClient
 
 async def main():
     print("🌟 LNT Sovereign Platform Demo")
