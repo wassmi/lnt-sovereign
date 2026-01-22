@@ -1,0 +1,1 @@
+{"domain_id": "TEMPORAL_TEST", "domain_name": "Temporal Test Domain", "version": "1.0.0", "entities": ["funding"], "constraints": [{"id": "TEMP_01", "entity": "funding", "operator": "GT", "value": 20000, "description": "Funding must average > 20k", "weight": 1.0, "temporal_window": "1h"}]}

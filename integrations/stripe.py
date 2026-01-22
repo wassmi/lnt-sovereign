@@ -42,7 +42,7 @@ class LNTStripeIntegration:
     - Ensure compliance before subscription creation
     """
     
-    def __init__(self, manifest_path: str = "manifests/stripe_payments.json"):
+    def __init__(self, manifest_path: str = "lnt_sovereign/manifests/examples/stripe_payments.json"):
         """
         Initialize with a payment verification manifest.
         Falls back to JIT kernel if available, otherwise standard kernel.
@@ -255,7 +255,7 @@ if __name__ == "__main__":
     import os
     
     # Create manifest if it doesn't exist
-    manifest_path = "manifests/stripe_payments.json"
+    manifest_path = "lnt_sovereign/manifests/examples/stripe_payments.json"
     if not os.path.exists(manifest_path):
         manifest = create_default_manifest()
         with open(manifest_path, 'w') as f:

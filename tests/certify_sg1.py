@@ -9,7 +9,11 @@ from lnt_sovereign.core.topology import SynthesisManifold
 def certify_massive_manifold():
     print("--- LNT Sovereign Grade (SG-1) Certification Audit ---")
     
-    mega_dir = "manifests/mega"
+    mega_dir = os.path.join("lnt_sovereign", "manifests", "mega")
+    if not os.path.exists(mega_dir):
+        print(f"Skipping Mega Certification: {mega_dir} not found (Protective Ignore active).")
+        return
+        
     manifest_files = [f for f in os.listdir(mega_dir) if f.endswith(".json")]
     
     total_rules = 0
@@ -46,7 +50,8 @@ def certify_massive_manifold():
     end_time = time.perf_counter()
     print("------------------------------------------------------")
     print(f"TOTAL RULES CERTIFIED: {total_rules}")
-    print(f"TOTAL REGISTRY SIZE:   {os.path.getsize(mega_dir)/1e6:.2f} MB")
+    registry_size = sum(os.path.getsize(os.path.join(mega_dir, f)) for f in manifest_files)
+    print(f"TOTAL REGISTRY SIZE:   {registry_size/1e6:.2f} MB")
     print(f"AVERAGE EVAL TIME:     {(end_time-start_time)/len(manifest_files)*1000:.2f}ms (Engine Warmup Included)")
     print("SG-1 CERTIFICATION:    SUCCESS")
     print("------------------------------------------------------")

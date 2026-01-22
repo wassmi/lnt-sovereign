@@ -45,10 +45,10 @@ site/
 .idea/
 
 # LNT Registry Artifacts (Large generated manifests)
-manifests/*
-!manifests/examples/
-manifests/mega/*.json
-!manifests/mega/.gitkeep
+lnt_sovereign/manifests/*
+!lnt_sovereign/manifests/examples/
+lnt_sovereign/manifests/mega/*.json
+!lnt_sovereign/manifests/mega/.gitkeep
 
 # Local testing
 tests/.pytest_cache/

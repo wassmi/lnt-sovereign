@@ -35,8 +35,10 @@ def test_temporal_trailing_average(manifold):
     # But Manifest expects a path. Let's write a temp file.
     import json
     import os
-    os.makedirs("manifests/test", exist_ok=True)
-    with open("manifests/test/temporal.json", "w") as f:
+    test_dir = os.path.join("lnt_sovereign", "manifests", "test")
+    os.makedirs(test_dir, exist_ok=True)
+    test_path = os.path.join(test_dir, "temporal.json")
+    with open(test_path, "w") as f:
         json.dump(manifest_data, f)
 
     # 2. Simulate historical data (Historical average = 15k)
@@ -55,7 +57,7 @@ def test_temporal_trailing_average(manifold):
     # We need to bridge detect_domain to return our test manifest
     # For now, let's just test the kernel_engine directly for speed.
     
-    manifold.kernel_engine.load_manifest("manifests/test/temporal.json")
+    manifold.kernel_engine.load_manifest(test_path)
     result = manifold.kernel_engine.trace_evaluate({"funding": 10000})
     
     assert result["status"] == "REJECTED"

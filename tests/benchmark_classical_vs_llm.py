@@ -10,8 +10,8 @@ def run_benchmark():
     parser = NeuralParser()
     
     # 1. Setup Manifests
-    llm_manifest_path = "manifests/examples/visa_application.json"
-    classical_manifest_path = "manifests/examples/credit_score_v1.json"
+    llm_manifest_path = "lnt_sovereign/manifests/examples/visa_application.json"
+    classical_manifest_path = "lnt_sovereign/manifests/examples/credit_score_v1.json"
     
     llm_manifest = engine.load_manifest(llm_manifest_path)
     classical_manifest = engine.load_manifest(classical_manifest_path)

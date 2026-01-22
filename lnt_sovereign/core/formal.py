@@ -312,7 +312,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         filepath = sys.argv[1]
     else:
-        filepath = "manifests/healthcare_triage.json"
+        filepath = "lnt_sovereign/manifests/examples/healthcare_triage.json"
     
     print(f"Verifying manifest: {filepath}")
     print("-" * 50)

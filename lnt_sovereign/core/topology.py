@@ -29,7 +29,10 @@ class SynthesisManifold:
         self.analytics = SovereignAnalyticsEngine(self.monitor)
         self.bias_auditor: BiasAuditor = BiasAuditor()
         self._compiled_cache: Dict[str, OptimizedKernel] = {} # domain_id -> OptimizedKernel
-        self.manifest_dir: str = os.path.join("manifests", "examples")
+        
+        # Professional distribution path resolution
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        self.manifest_dir = os.path.join(base_dir, "manifests", "examples")
 
     def process_application(self, user_text: str) -> Dict[str, Any]:
         """
