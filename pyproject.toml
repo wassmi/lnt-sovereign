@@ -26,7 +26,8 @@ dependencies = [
     "numba",
     "sqlalchemy",
     "httpx",
-    "z3-solver"
+    "z3-solver",
+    "pytest-asyncio"
 ]
 
 [project.urls]

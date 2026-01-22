@@ -10,6 +10,7 @@ from lnt_sovereign.core.analytics import SovereignAnalyticsEngine
 import hashlib
 import json
 import os
+import time
 from typing import Dict, Any, List, Optional
 
 class SynthesisManifold:
@@ -28,7 +29,7 @@ class SynthesisManifold:
         self.analytics = SovereignAnalyticsEngine(self.monitor)
         self.bias_auditor: BiasAuditor = BiasAuditor()
         self._compiled_cache: Dict[str, OptimizedKernel] = {} # domain_id -> OptimizedKernel
-        self.manifest_dir: str = "manifests"
+        self.manifest_dir: str = os.path.join("manifests", "examples")
 
     def process_application(self, user_text: str) -> Dict[str, Any]:
         """

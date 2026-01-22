@@ -4,7 +4,7 @@ from lnt_sovereign.core.kernel import KernelEngine
 
 def test_kernel_healthcare_pass():
     """Test that valid vitals pass healthcare triage"""
-    engine = KernelEngine("manifests/healthcare_triage.json")
+    engine = KernelEngine("manifests/examples/healthcare_triage.json")
     
     proposal = {
         "heart_rate": 75,
@@ -19,7 +19,7 @@ def test_kernel_healthcare_pass():
 
 def test_kernel_healthcare_fail():
     """Test that critical vitals are rejected"""
-    engine = KernelEngine("manifests/healthcare_triage.json")
+    engine = KernelEngine("manifests/examples/healthcare_triage.json")
     
     proposal = {
         "heart_rate": 200,  # Dangerously high
@@ -35,7 +35,7 @@ def test_kernel_healthcare_fail():
 
 def test_kernel_visa_pass():
     """Test that valid visa application passes"""
-    engine = KernelEngine("manifests/visa_application.json")
+    engine = KernelEngine("manifests/examples/visa_application.json")
     
     proposal = {
         "has_valid_passport": True,
@@ -49,7 +49,7 @@ def test_kernel_visa_pass():
 
 def test_kernel_visa_fail_funding():
     """Test that insufficient funding is rejected"""
-    engine = KernelEngine("manifests/visa_application.json")
+    engine = KernelEngine("manifests/examples/visa_application.json")
     
     proposal = {
         "has_valid_passport": True,
