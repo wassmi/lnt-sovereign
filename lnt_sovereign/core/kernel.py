@@ -1,8 +1,8 @@
-from typing import List, Dict, Any, Optional, Final
-from pydantic import BaseModel, Field, ConfigDict, field_validator
+from typing import List, Dict, Any, Optional
+from pydantic import BaseModel, ConfigDict, field_validator
 from enum import StrEnum
 import json
-from lnt_sovereign.core.exceptions import ManifestValidationError, EvaluationError, TypeMismatchError, LNTError
+from lnt_sovereign.core.exceptions import EvaluationError
 
 class ConstraintOperator(StrEnum):
     GT = "GT"
@@ -98,7 +98,8 @@ class KernelEngine:
             if self.state_buffer and entity_val is not None:
                 try:
                     self.state_buffer.push(constraint.entity, float(entity_val))
-                except: pass # Ignore if non-numeric
+                except Exception: # nosec B110 # Ignore if non-numeric
+                    pass
 
             # 2. Temporal Context Resolution
             actual_val = entity_val
@@ -147,7 +148,7 @@ class KernelEngine:
                         is_violation = True
                         msg = f"Value {actual_val} outside allowed range {constraint.value}"
 
-            except TypeError as te:
+            except TypeError:
                 # Instead of crashing, report as violation
                 is_violation = True
                 msg = f"Type Mismatch: Expected compatible type for '{constraint.entity}', got {type(actual_val).__name__}"

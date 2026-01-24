@@ -1,5 +1,4 @@
-from typing import Dict, Any, List, Optional
-from pydantic import BaseModel, ConfigDict
+from typing import Dict, Any, List
 from lnt_sovereign.core.kernel import DomainManifest
 
 class NeuralParser:
@@ -58,12 +57,18 @@ class NeuralParser:
             
             # Heuristic overrides for failure testing
             if "rejected" in text or "risk" in text:
-                if "funding" in entity: proposal[entity] = 100.0
-                if "oxygen_saturation" in entity: proposal[entity] = 80.0
-                if "heart_rate" in entity: proposal[entity] = 200.0
-                if "has" in entity: proposal[entity] = False
-                if "age" in entity: proposal[entity] = 50.0 # triggers LT 45
-                if "proficiency" in entity or "clb" in entity: proposal[entity] = 2.0 # triggers GT 6
+                if "funding" in entity:
+                    proposal[entity] = 100.0
+                if "oxygen_saturation" in entity:
+                    proposal[entity] = 80.0
+                if "heart_rate" in entity:
+                    proposal[entity] = 200.0
+                if "has" in entity:
+                    proposal[entity] = False
+                if "age" in entity:
+                    proposal[entity] = 50.0 # triggers LT 45
+                if "proficiency" in entity or "clb" in entity:
+                    proposal[entity] = 2.0 # triggers GT 6
                 
         return proposal
 

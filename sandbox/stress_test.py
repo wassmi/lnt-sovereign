@@ -1,5 +1,4 @@
 from lnt_sovereign.client import LNTClient
-import json
 
 def stress_test():
     client = LNTClient()

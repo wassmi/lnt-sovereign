@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 from pydantic import BaseModel, ConfigDict
 from lnt_sovereign.core.kernel import DomainManifest
 from lnt_sovereign.core.formal import FormalVerifier

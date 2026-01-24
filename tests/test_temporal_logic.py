@@ -1,7 +1,5 @@
-import time
 import pytest
 from lnt_sovereign.core.topology import SynthesisManifold
-from lnt_sovereign.core.kernel import DomainManifest, ManifestConstraint, ConstraintOperator
 
 @pytest.fixture
 def manifold():

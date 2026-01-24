@@ -1,5 +1,4 @@
-from typing import Dict, Any, List, Optional
-import time
+from typing import Dict, Any, List
 from collections import Counter
 from datetime import datetime
 from lnt_sovereign.core.monitor import SovereignMonitor

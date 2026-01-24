@@ -5,7 +5,7 @@ The Composability Moat - Seamless integration with existing tools
 Demonstrates LNT verifying payment eligibility before Stripe charges.
 """
 
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any
 from dataclasses import dataclass
 import json
 
@@ -283,7 +283,7 @@ if __name__ == "__main__":
     )
     
     result1 = integration.verify_customer_eligibility(customer1, 5000)  # $50
-    print(f"\nTest 1: Valid charge ($50)")
+    print("\nTest 1: Valid charge ($50)")
     print(f"  Eligible: {result1['eligible']}")
     print(f"  Recommendation: {result1['recommendation']}")
     
@@ -300,13 +300,13 @@ if __name__ == "__main__":
     )
     
     result2 = integration.verify_customer_eligibility(customer2, 5000)
-    print(f"\nTest 2: High-risk customer")
+    print("\nTest 2: High-risk customer")
     print(f"  Eligible: {result2['eligible']}")
     print(f"  Recommendation: {result2['recommendation']}")
     
     # Test case 3: Amount too high
     result3 = integration.verify_customer_eligibility(customer1, 1500000)  # $15,000
-    print(f"\nTest 3: Amount too high ($15,000)")
+    print("\nTest 3: Amount too high ($15,000)")
     print(f"  Eligible: {result3['eligible']}")
     print(f"  Recommendation: {result3['recommendation']}")
     

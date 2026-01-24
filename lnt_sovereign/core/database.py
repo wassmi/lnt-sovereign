@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, JSON, event
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
 from datetime import datetime
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 import json
 import hashlib
 

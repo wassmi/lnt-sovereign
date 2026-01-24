@@ -1,7 +1,7 @@
 import json
 import os
 import random
-from typing import List, Dict, Any
+from typing import List
 from lnt_sovereign.core.kernel import DomainManifest, ManifestConstraint, ConstraintOperator
 
 class ManifestFactory:
@@ -22,7 +22,7 @@ class ManifestFactory:
         base_rules = []
         for i in range(50):
             rid = f"{domain_id}_BASE_{i:03d}"
-            target_entity = random.choice(entities)
+            target_entity = random.choice(entities) # nosec B311
             constraints.append(ManifestConstraint(
                 id=rid,
                 entity=target_entity,
@@ -37,14 +37,14 @@ class ManifestFactory:
         # 2. Complex Dependent Rules (Level 1+)
         for i in range(rule_count - 50):
             rid = f"{domain_id}_RULE_{i:04d}"
-            target_entity = random.choice(entities)
+            target_entity = random.choice(entities) # nosec B311
             
             # Simple DAG dependency chain
-            deps = random.sample(base_rules, random.randint(1, 3)) if random.random() > 0.7 else None
+            deps = random.sample(base_rules, random.randint(1, 3)) if random.random() > 0.7 else None # nosec B311
             
             # Random Logic
-            op = random.choice([ConstraintOperator.GT, ConstraintOperator.LT, ConstraintOperator.RANGE])
-            val = random.randint(10, 500) if op != ConstraintOperator.RANGE else [10, 1000]
+            op = random.choice([ConstraintOperator.GT, ConstraintOperator.LT, ConstraintOperator.RANGE]) # nosec B311
+            val = random.randint(10, 500) if op != ConstraintOperator.RANGE else [10, 1000] # nosec B311
             
             constraints.append(ManifestConstraint(
                 id=rid,
@@ -52,8 +52,8 @@ class ManifestFactory:
                 operator=op,
                 value=val,
                 description=f"Sovereign constraint {rid} governing {target_entity}",
-                severity=random.choice(["TOXIC", "WARNING", "IMPOSSIBLE"]),
-                weight=round(random.uniform(0.1, 0.8), 2),
+                severity=random.choice(["TOXIC", "WARNING", "IMPOSSIBLE"]), # nosec B311
+                weight=round(random.uniform(0.1, 0.8), 2), # nosec B311
                 conditional_on=deps
             ))
 

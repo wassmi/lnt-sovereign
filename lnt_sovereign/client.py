@@ -1,11 +1,9 @@
 import httpx
 import asyncio
-import json
 import logging
 import os
-from typing import Dict, Any, Optional, List, Union
+from typing import Dict, Any, Optional, List
 from dataclasses import dataclass
-from datetime import datetime
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("LNT-SDK")

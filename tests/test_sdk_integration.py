@@ -1,9 +1,7 @@
 import pytest
-import asyncio
 from fastapi.testclient import TestClient
-from server import app, UserRole, API_REGISTRY
+from server import app
 from lnt_sovereign.client import LNTClient
-import json
 
 client = TestClient(app)
 

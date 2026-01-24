@@ -1,7 +1,7 @@
 import typer
 import json
 import os
-from typing import Optional, Dict, Any, List
+from typing import Optional
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
@@ -108,13 +108,13 @@ def check(
             console.print(f"[bold red]Warning:[/bold red] Could not export report: {str(e)}")
 
     if exit_code != 0:
-        console.print(f"\n[bold red]✖ ENFORCEMENT FAILURE:[/bold red]")
+        console.print("\n[bold red]✖ ENFORCEMENT FAILURE:[/bold red]")
         for r in reasons:
             console.print(f"  - {r}")
         raise typer.Exit(code=exit_code)
     else:
         if reasons and advisory:
-            console.print(f"\n[bold yellow]⚠ ADVISORY WARNING (Bypassed):[/bold yellow]")
+            console.print("\n[bold yellow]⚠ ADVISORY WARNING (Bypassed):[/bold yellow]")
             for r in reasons:
                 console.print(f"  - {r}")
         console.print("\n[bold green]✔ Compliance Validation Successful.[/bold green]")

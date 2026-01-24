@@ -1,5 +1,4 @@
 import time
-import numpy as np
 from lnt_sovereign.core.kernel import KernelEngine
 from lnt_sovereign.core.compiler import SovereignCompiler
 from lnt_sovereign.core.optimized_kernel import OptimizedKernel
@@ -29,7 +28,8 @@ def run_benchmark():
     
     # 3. Benchmark Legacy Kernel (Interpreted)
     # Warm up
-    for _ in range(100): kernel_engine.evaluate(proposal)
+    for _ in range(100):
+        kernel_engine.evaluate(proposal)
     start_time = time.perf_counter()
     for _ in range(iterations):
         _ = kernel_engine.evaluate(proposal)
@@ -37,7 +37,8 @@ def run_benchmark():
     
     # 4. Benchmark Optimized Kernel (Vectorized BELM)
     # Warm up
-    for _ in range(100): opt_kernel.evaluate(proposal)
+    for _ in range(100):
+        opt_kernel.evaluate(proposal)
     start_time = time.perf_counter()
     for _ in range(iterations):
         _ = opt_kernel.evaluate(proposal)
@@ -94,12 +95,14 @@ def run_stress_test():
     
     # Legacy
     start_time = time.perf_counter()
-    for _ in range(iterations): _ = kernel_engine.evaluate(proposal)
+    for _ in range(iterations):
+        _ = kernel_engine.evaluate(proposal)
     legacy_time = (time.perf_counter() - start_time) / iterations
     
     # Optimized
     start_time = time.perf_counter()
-    for _ in range(iterations): _ = opt_kernel.evaluate(proposal)
+    for _ in range(iterations):
+        _ = opt_kernel.evaluate(proposal)
     opt_time = (time.perf_counter() - start_time) / iterations
     
     print(f"Legacy Kernel (1000 rules): {legacy_time * 1e6:.2f} microseconds")
@@ -130,11 +133,13 @@ def run_stress_test():
     opt_kernel_dense = OptimizedKernel(compiled_dense)
     
     start_time = time.perf_counter()
-    for _ in range(100): kernel_engine.evaluate(proposal)
+    for _ in range(100):
+        kernel_engine.evaluate(proposal)
     legacy_dense_time = (time.perf_counter() - start_time) / 100
     
     start_time = time.perf_counter()
-    for _ in range(100): opt_kernel_dense.evaluate(proposal)
+    for _ in range(100):
+        opt_kernel_dense.evaluate(proposal)
     opt_dense_time = (time.perf_counter() - start_time) / 100
     
     print(f"Legacy Kernel (10k rules): {legacy_dense_time * 1e3:.2f} ms")

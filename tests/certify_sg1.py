@@ -4,7 +4,6 @@ import time
 from lnt_sovereign.core.kernel import KernelEngine
 from lnt_sovereign.core.compiler import SovereignCompiler
 from lnt_sovereign.core.optimized_kernel import OptimizedKernel
-from lnt_sovereign.core.topology import SynthesisManifold
 
 def certify_massive_manifold():
     print("--- LNT Sovereign Grade (SG-1) Certification Audit ---")
@@ -33,10 +32,10 @@ def certify_massive_manifold():
             manifest = engine.load_manifest(path)
             
             # 2. Performance Certification (BELM Compile)
-            c_start = time.perf_counter()
+            time.perf_counter()
             compiled = compiler.compile(manifest)
             kernel = OptimizedKernel(compiled)
-            c_end = time.perf_counter()
+            time.perf_counter()
             
             # 3. Execution Certification (Weighted Manifold)
             # Generate a mock proposal matching the entities

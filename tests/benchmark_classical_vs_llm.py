@@ -1,6 +1,5 @@
 import time
-import json
-from lnt_sovereign.core.kernel import KernelEngine, DomainManifest
+from lnt_sovereign.core.kernel import KernelEngine
 from lnt_sovereign.core.neural import NeuralParser
 
 def run_benchmark():
@@ -14,7 +13,7 @@ def run_benchmark():
     classical_manifest_path = "lnt_sovereign/manifests/examples/credit_score_v1.json"
     
     llm_manifest = engine.load_manifest(llm_manifest_path)
-    classical_manifest = engine.load_manifest(classical_manifest_path)
+    engine.load_manifest(classical_manifest_path)
 
     # 2. Neuro-Symbolic Loop (LLM Style)
     # Includes text parsing + symbolic audit
@@ -42,13 +41,13 @@ def run_benchmark():
     
     classical_time_ms = (end_classical - start_classical) * 1000
 
-    print(f"\n[Neuro-Symbolic / LLM Mode]")
-    print(f"> Task: Parse Text + Audit Logic")
+    print("\n[Neuro-Symbolic / LLM Mode]")
+    print("> Task: Parse Text + Audit Logic")
     print(f"> Latency: {llm_time_ms:.4f} ms")
     print(f"> Status: {res_llm['status']}")
 
-    print(f"\n[Classical ML / Direct Mode]")
-    print(f"> Task: Direct Data Audit (XGBoost/Tabular)")
+    print("\n[Classical ML / Direct Mode]")
+    print("> Task: Direct Data Audit (XGBoost/Tabular)")
     print(f"> Latency: {classical_time_ms:.4f} ms")
     print(f"> Status: {res_classical['status']}")
 

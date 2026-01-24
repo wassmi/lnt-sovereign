@@ -1,5 +1,4 @@
 from typing import Dict, Any, List, DefaultDict
-import json
 from collections import defaultdict
 
 class BiasAuditor:
@@ -17,7 +16,7 @@ class BiasAuditor:
         Calculates a 'Fairness Score' for the current proposal.
         """
         # Simulated trait extraction
-        traits = self._extract_demographic_traits(user_text)
+        # (Demographic traits tracked via record_decision)
         
         # Scoring logic: 1.0 is perfectly fair, 0.0 is high risk.
         score = 1.0

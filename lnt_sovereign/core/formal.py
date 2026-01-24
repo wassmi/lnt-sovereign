@@ -9,10 +9,9 @@ Uses Z3 SMT solver to:
 """
 
 from z3 import (
-    Solver, Int, Real, Bool, And, Or, Not, Implies,
-    sat, unsat, unknown, ForAll, Exists
+    Solver, Int, Real, Bool, And, Or, Not, sat, unsat
 )
-from typing import Dict, Any, List, Tuple, Optional
+from typing import Dict, Any, Tuple, Optional
 import json
 
 
@@ -46,7 +45,7 @@ class FormalVerifier:
         # Determine variable type from operator/value
         if operator == "REQUIRED":
             var = self._create_variable(entity, "bool")
-            return var == True
+            return var
         elif operator == "EQ" and isinstance(value, bool):
             var = self._create_variable(entity, "bool")
             return var == value
@@ -129,7 +128,7 @@ class FormalVerifier:
             try:
                 z3_constraint = self._constraint_to_z3(c)
                 self.solver.add(z3_constraint)
-            except Exception:
+            except Exception: # nosec B112
                 continue
         
         result = self.solver.check()
@@ -178,7 +177,7 @@ class FormalVerifier:
             try:
                 z3_constraint = self._constraint_to_z3(c)
                 self.solver.add(z3_constraint)
-            except Exception:
+            except Exception: # nosec B112
                 continue
         
         # Add NEGATION of safety property
@@ -239,7 +238,7 @@ class FormalVerifier:
             try:
                 z3_constraint = self._constraint_to_z3(c)
                 self.solver.add(z3_constraint)
-            except Exception:
+            except Exception: # nosec B112
                 continue
         
         # Add given conditions

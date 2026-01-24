@@ -3,8 +3,8 @@ import random
 import time
 import hashlib
 from datetime import datetime
-from typing import List, Dict, Any
-from lnt_sovereign.core.symbolic import LogicEngine, VisaState, RequirementStatus
+from typing import Dict, Any
+from lnt_sovereign.core.symbolic import LogicEngine, VisaState
 
 class AuditLogger:
     """
@@ -36,7 +36,7 @@ class AuditLogger:
             "@context": "https://lnt.ai/contexts/sovereign-audit-v1.jsonld",
             "type": "ComplianceAudit",
             "timestamp": timestamp,
-            "subject": hashlib.sha1(user_input.encode()).hexdigest()[:8], # Anonymous ID
+            "subject": hashlib.sha256(user_input.encode(), usedforsecurity=False).hexdigest()[:8], # Anonymous ID
             "manifold_decision": result["status"],
             "sovereign_proof": f"sha256:{proof_hash}",
             "regulatory_framework": "Bill C-27 / AIDA 2026"
@@ -62,7 +62,7 @@ class ScaleTester:
                     language_proficiency=random.randint(3, 10),       # nosec B311
                     has_business_commitment=random.choice([True, False]) # nosec B311
                 )
-                constraints = LogicEngine.evaluate(state)
+                LogicEngine.evaluate(state)
                 results["total"] += 1
                 results["passed"] += 1
             except Exception:
