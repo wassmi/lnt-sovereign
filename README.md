@@ -1,72 +1,50 @@
-# Sovereign LNT: The Deterministic Safety Layer
-**Sovereign Logic. Absolute Safety. Zero Hallucinations.**
+# LNT: Logic Neutrality Tensor
+**Deterministic Validation Layer for AI-Generated Intents**
 
-[![PyPI version](https://img.shields.io/badge/pypi-v1.0.0-blue.svg)](https://pypi.org/project/lnt-sovereign/)
-[![Sovereign Grade](https://img.shields.io/badge/Grade-SG--2-gold.svg)](#sovereign-grade)
-[![Performance](https://img.shields.io/badge/Latency-2.5ms_/_10k_rules-green.svg)](#performance)
-[![Verification](https://img.shields.io/badge/Z3-Formally_Proven-brightgreen.svg)](#formal-verification)
+## ⚖️ Overview (Open Source)
+LNT is a high-performance neuro-symbolic engine designed to enforce deterministic symbolic constraints on probabilistic AI outputs. It provides sub-millisecond scaling and formal Z3 consistency verification for mission-critical validation in FinTech, HealthTech, and automated infrastructure.
 
-## ⚖️ The AI Determinism Crisis
-Current AI guardrails are probabilistic—they "guess" if a response is safe. In mission-critical infrastructure (Fintech, Healthcare, Central Banking), guessing is unacceptable. **Sovereign LNT** (Logic Neutrality Tensor) provides a **Symbolic Cage** that enforces deterministic laws over probabilistic outputs.
+**License**: MIT. This distribution contains the core engine and public example manifests.
 
-## 🚀 Key Features
+## 🚀 Key Technical Specifications
+*   **Vectorized Kernel (BELM)**: SIMD-accelerated logic manifold ($O(n)$ complexity).
+*   **Symbolic CLI**: Deterministic verification for MLOps pipelines.
+*   **Tiered Enforcement**: Threshold-based logic validation (Advisory vs. Hard Fail).
+*   **Formal Verification**: SMT-based (Z3) manifest consistency analysis.
 
-### 1. BELM (Bilateral Evaluation Logic Manifold)
-A JIT-compiled, SIMD-accelerated kernel capable of processing **10,000+ rules in <3ms**. LNT doesn't just check rules; it projects them into a high-dimensional logic manifold.
-
-### 2. Temporal Sovereignty (SG-2)
-Real-time state monitoring with sliding windows. Audit delta-changes, trailing averages, and event frequencies directly within the logic kernel.
-*   **Micro-Context**: Millisecond-level burst protection.
-*   **Macro-Context**: Multi-month behavioral consistency.
-
-### 3. Relationship Logic (DAG)
-Complex rule dependencies. Rules can trigger or prune other checks based on conditional prerequisites, ensuring efficient and context-aware audits.
-
-### 4. Mega-Manifest Registry
-Out-of-the-box compliance for 10 industrial domains, including:
-*   🏛 **Central Bank**: Monetary policy and digital currency constraints.
-*   🏥 **ICU Level-3**: Life-critical medical telemetry logic.
-*   🛡 **Cyber Sentry**: Real-time network threat neutralization.
-*   🚦 **Autonomous Drive**: Level 5 safety constraints.
-
-## 🛠 Quick Start
+## 🛠️ Quick Start
 
 ### Installation
 ```bash
 pip install lnt-sovereign
 ```
 
-### Basic Usage
-```python
-from lnt_sovereign import LNTClient
+### User as a Logic Verification Tool (CLI)
+Integrate LNT into your automated pipelines to verify behavioral consistency before deployment. See our [CI/CD Workflow Template](examples/mlops/lnt-sovereign.yml) for a ready-to-use GitHub Action.
 
-# Initialize the Sovereign Client
-client = LNTClient(api_key="your_sovereign_key")
+```bash
+# Soft Governance (Advisory Mode)
+lnt check --manifest policy.json --input proposal.json --advisory
 
-# Propose an intent
-proposal = {
-    "entity": "tx_velocity",
-    "value": 450,
-    "context": {"account_age_days": 2}
-}
-
-# Audit against the 'Fintech' manifest
-result = client.audit(manifest_id="sovereign_fin_aml", proposal=proposal)
-
-if result.status == "PASS":
-    print(f"Sovereign Score: {result.score} - EXECUTING.")
-else:
-    print(f"REJECTED: {result.violations[0].description}")
+# Hard Enforcement (Fail if score is low or TOXIC rules violated)
+lnt check --manifest policy.json --input proposal.json --fail-under 90 --fail-on-toxic
 ```
 
-## 🔍 Formal Verification
-Every LNT manifest is verified using **Z3 SMT Solvers** to ensure:
-*   **Zero Conflicts**: No two rules can contradict each other.
-*   **Full Reachability**: Every constraint can be logically satisfied.
-*   **Boundary Safety**: Logic boundaries are mathematically sealed.
+### Use as an SDK
+```python
+from lnt_sovereign.client import LNTClient
 
-## 📜 Sovereign Portal
-For full technical documentation, architecture diagrams, and rule anatomy, visit the [Sovereign Portal](docs/index.md).
+client = LNTClient()
+result = client.audit(manifest_id="visa_application", proposal=proposal)
+print(f"Validation Certified: Score {result.score}")
+```
+
+## 📜 Technical Documentation
+For detailed architecture, API reference, and MLOps guides, visit the [Documentation Portal](docs/index.md).
+
+*   [**MLOps Integration Guide**](docs/mlops_integration.md): How to set up LNT as a "Logic Gate" in CI/CD.
+*   [**Technical Whitepaper**](docs/whitepaper.md): Mathematical foundations and benchmark distributions.
+*   [**API Reference**](docs/api_reference.md): Complete parameter registry and error codes.
 
 ---
-*LNT is the "Kernel of Truth" for the Machine Age. Join the Sovereign Movement.*
+*Maintained for high-reliability AI system development.*

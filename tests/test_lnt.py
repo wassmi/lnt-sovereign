@@ -40,7 +40,7 @@ def test_kernel_visa_pass():
     proposal = {
         "has_valid_passport": True,
         "funding_available": 25000,
-        "language_clb": 8,
+        "language_proficiency": 8,
         "has_business_commitment": True
     }
     
@@ -54,7 +54,7 @@ def test_kernel_visa_fail_funding():
     proposal = {
         "has_valid_passport": True,
         "funding_available": 500,  # Too low
-        "language_clb": 8,
+        "language_proficiency": 8,
         "has_business_commitment": True
     }
     

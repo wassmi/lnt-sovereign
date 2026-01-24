@@ -1,0 +1,39 @@
+name: LNT Sovereign Verification
+
+on:
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  verify-logic:
+    name: "Sovereign Logic Check"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout Code"
+        uses: actions/checkout@v4
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: "Install LNT Sovereign"
+        run: pip install lnt-sovereign
+
+      - name: "Run Symbolic Verification"
+        # Example using the provided Canadian Start-up Visa manifest
+        # Adjust --manifest and --input paths to your specific project needs.
+        run: |
+          lnt check --manifest lnt_sovereign/manifests/examples/visa_application.json \
+                    --input examples/sample_proposal.json \
+                    --fail-on-toxic \
+                    --fail-under 90 \
+                    --json-report artifacts/sovereign_report.json
+
+      - name: "Upload Verification Results"
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lnt-verification-report
+          path: artifacts/sovereign_report.json

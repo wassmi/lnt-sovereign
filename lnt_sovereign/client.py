@@ -2,6 +2,7 @@ import httpx
 import asyncio
 import json
 import logging
+import os
 from typing import Dict, Any, Optional, List, Union
 from dataclasses import dataclass
 from datetime import datetime
@@ -22,11 +23,11 @@ class LNTResponse:
 class LNTClient:
     """
     Sovereign LNT SDK: The professional interface for Neuro-Symbolic Logic.
-    Supports asynchronous execution, shadow-mode audits, and verification proofs.
+    Supports asynchronous execution, local audits, and verification proofs.
     """
     def __init__(
         self, 
-        api_key: str, 
+        api_key: Optional[str] = None, 
         base_url: str = "http://localhost:8000",
         timeout: float = 30.0,
         max_retries: int = 3
@@ -38,7 +39,7 @@ class LNTClient:
         self.headers = {
             "X-LNT-API-KEY": self.api_key,
             "Content-Type": "application/json",
-            "User-Agent": "LNT-Python-SDK/1.0.0"
+            "User-Agent": "LNT-Python-SDK/1.0.2"
         }
         self._client: Optional[httpx.AsyncClient] = None
 
@@ -70,13 +71,11 @@ class LNTClient:
         shadow_mode: bool = False
     ) -> Dict[str, Any]:
         """
-        Evaluates a request against the sovereign logic manifold.
-        
-        Args:
-            user_text: The raw neural input (e.g., patient vitals, visa applicant text).
-            domain: Optional override for domain detection.
-            shadow_mode: If True, the audit is logged but does not block (non-blocking verification).
+        Remote evaluation via Sovereign Cloud.
         """
+        if not self.api_key:
+            return {"status": "ERROR", "error": "api_key is required for remote evaluation."}
+            
         client = await self._get_client()
         payload = {
             "user_text": user_text,
@@ -102,6 +101,50 @@ class LNTClient:
                 return {"status": "API_ERROR", "code": e.response.status_code, "detail": e.response.text}
         
         return {"status": "UNKNOWN_ERROR"}
+
+    def audit(self, manifest_id: str, proposal: Dict[str, Any]) -> Any:
+        """
+        Directly audits a proposal against a logic manifest.
+        If no api_key is provided, this runs locally.
+        
+        Args:
+            manifest_id: The ID of the manifest (e.g., 'visa_application')
+            proposal: The structured data to audit.
+        """
+        from lnt_sovereign.core.topology import SynthesisManifold
+        from dataclasses import make_dataclass
+        
+        # Simulating the local engine behavior for the 'toolbox' mode
+        manifold = SynthesisManifold()
+        
+        # Map manifest_id to domain_id if needed, or use filename directly
+        # In the engine, manifest_id usually leads to a file in manifests/examples/
+        # SynthesisManifold's process_application detects domain from text, 
+        # but for a direct 'audit' we can go straight to the kernel.
+        
+        manifest_path = os.path.join(manifold.manifest_dir, f"{manifest_id}.json")
+        if not os.path.exists(manifest_path):
+            # Fallback to direct name check
+            manifest_path = manifold._get_manifest_path(manifest_id.upper())
+
+        try:
+            manifest = manifold.kernel_engine.load_manifest(manifest_path)
+            trace = manifold.kernel_engine.trace_evaluate(proposal)
+            
+            # Wrap in a response object
+            LNTResult = make_dataclass('LNTResult', ['status', 'score', 'violations', 'domain', 'proof'])
+            violations_list = [v for v in trace["violations"]]
+            
+            return LNTResult(
+                status="PASS" if not trace["violations"] else "FAIL",
+                score=trace["score"],
+                violations=violations_list,
+                domain=manifest.domain_id,
+                proof="local_verification_signed"
+            )
+        except Exception as e:
+            logger.error(f"Local audit failed: {str(e)}")
+            raise e
 
     async def get_system_health(self) -> Dict[str, Any]:
         """Queries the engine's operational metrics (Latency, Hallucination Rate)."""

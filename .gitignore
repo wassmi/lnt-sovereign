@@ -51,6 +51,33 @@ lnt_sovereign/manifests/mega/*.json
 !lnt_sovereign/manifests/mega/.gitkeep
 
 # Local testing
+.pytest_cache/
 tests/.pytest_cache/
 .coverage
 htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*.bak
+.ipynb_checkpoints/
+
+# OS specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Environment variables
+.env
+.env.*
+
+# Sovereign Commercial Vault (Proprietary IP)
+lnt_sovereign/vault/

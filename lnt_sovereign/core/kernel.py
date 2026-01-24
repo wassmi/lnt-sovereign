@@ -107,14 +107,14 @@ class KernelEngine:
                 actual_val = self.state_buffer.calculate_average(constraint.entity, win_sec)
 
             # 3. Existence Check
-            if actual_val is None and constraint.operator == ConstraintOperator.REQUIRED:
-                violation = self._create_violation(constraint, "Missing required entity")
-                violations.append(violation)
+            if actual_val is None:
+                is_missing_required = (constraint.operator == ConstraintOperator.REQUIRED)
+                # Strict Mode: If it's not present, it's a violation for any constraint 
+                # because we can't verify the logic.
+                violation_msg = "Missing required entity" if is_missing_required else f"Signal '{constraint.entity}' not found in proposal"
+                violations.append(self._create_violation(constraint, violation_msg))
                 deducted_weight += constraint.weight
                 results_map[constraint.id] = False
-                continue
-            
-            if actual_val is None:
                 continue
 
             # 4. Logic Evaluation
@@ -148,7 +148,9 @@ class KernelEngine:
                         msg = f"Value {actual_val} outside allowed range {constraint.value}"
 
             except TypeError as te:
-                raise TypeMismatchError(f"Logic clash for entity '{constraint.entity}': Expected numeric, got {type(entity_val).__name__}") from te
+                # Instead of crashing, report as violation
+                is_violation = True
+                msg = f"Type Mismatch: Expected compatible type for '{constraint.entity}', got {type(actual_val).__name__}"
             except Exception as e:
                 raise EvaluationError(f"Unexpected error during symbolic evaluation of {constraint.id}: {str(e)}") from e
 
