@@ -1,5 +1,4 @@
 import pytest
-import json
 from lnt_sovereign.core.kernel import KernelEngine
 
 def test_kernel_healthcare_pass():

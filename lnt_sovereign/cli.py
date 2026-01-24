@@ -1,13 +1,11 @@
 import typer
 import json
 import os
-import sys
 from typing import Optional, Dict, Any, List
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
 from rich.text import Text
-from lnt_sovereign.core.topology import SynthesisManifold
 from lnt_sovereign.core.kernel import KernelEngine
 
 app = typer.Typer(help="LNT: Logic Neutrality Tensor - Symbolic Verification for AI Foundations")

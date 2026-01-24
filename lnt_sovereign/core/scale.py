@@ -57,10 +57,10 @@ class ScaleTester:
             # Generate random profile
             try:
                 state = VisaState(
-                    has_valid_passport=random.choice([True, False]),
-                    funding_available=random.uniform(500, 50000),
-                    language_proficiency=random.randint(3, 10),
-                    has_business_commitment=random.choice([True, False])
+                    has_valid_passport=random.choice([True, False]),  # nosec B311
+                    funding_available=random.uniform(500, 50000),     # nosec B311
+                    language_proficiency=random.randint(3, 10),       # nosec B311
+                    has_business_commitment=random.choice([True, False]) # nosec B311
                 )
                 constraints = LogicEngine.evaluate(state)
                 results["total"] += 1

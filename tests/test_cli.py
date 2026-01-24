@@ -1,5 +1,4 @@
 import json
-import os
 from typer.testing import CliRunner
 from lnt_sovereign.cli import app
 

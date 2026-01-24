@@ -1,7 +1,6 @@
 import sys
 import os
 try:
-    from lnt_sovereign.client import LNTClient
     from lnt_sovereign.core.topology import SynthesisManifold
     print("✅ Successfully imported lnt_sovereign components.")
     
