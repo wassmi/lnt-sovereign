@@ -1,8 +1,6 @@
 from fastapi import FastAPI, Header, HTTPException, Body
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict, Any
 from lnt_sovereign.core.topology import SynthesisManifold
-import hashlib
-import json
 
 app = FastAPI(title="LNT Sovereign Engine")
 manifold = SynthesisManifold()
