@@ -34,10 +34,10 @@ class LNTClient:
         self.base_url = base_url.rstrip("/")
         self.timeout = timeout
         self.max_retries = max_retries
-        self.headers = {
-            "X-LNT-API-KEY": self.api_key,
+        self.headers: Dict[str, str] = {
+            "X-LNT-API-KEY": self.api_key or "",
             "Content-Type": "application/json",
-            "User-Agent": "LNT-Python-SDK/1.0.2"
+            "User-Agent": "LNT-Python-SDK/1.0.3"
         }
         self._client: Optional[httpx.AsyncClient] = None
 

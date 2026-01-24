@@ -47,7 +47,10 @@ Base.metadata.create_all(bind=engine)
 def get_last_hash(db: Session) -> str:
     """Retrieves the hash of the most recent audit entry to maintain the chain."""
     last_entry = db.query(DecisionAudit).order_by(DecisionAudit.id.desc()).first()
-    return last_entry.sovereign_proof if last_entry else "GENESIS_BLOCK"
+    if last_entry and hasattr(last_entry, 'sovereign_proof'):
+        res: str = str(last_entry.sovereign_proof)
+        return res
+    return "GENESIS_BLOCK"
 
 def log_decision(
     domain: str, 
