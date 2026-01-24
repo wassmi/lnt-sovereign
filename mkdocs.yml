@@ -3,20 +3,23 @@ site_description: High-performance Neuro-Symbolic Verification for the AI Age.
 theme:
   name: material
   palette:
+    scheme: slate
     primary: deep purple
     accent: purple
   features:
     - navigation.sections
     - navigation.expand
     - content.code.copy
+    - navigation.tabs
+    - search.highlight
 
 nav:
   - Home: index.md
-  - White Paper: whitepaper.md
-  - Architecture: architecture.md
-  - Sovereign Grade (SG-1/2): sovereign.md
-  - API Reference: api.md
-  - 10k Rule Registry: registry.md
+  - Integration Guide: mlops_integration.md
+  - Technical Whitepaper: whitepaper.md
+  - System Architecture: architecture.md
+  - API Reference: api_reference.md
+  - Engineering Records (ADRs): adr_001.md
 
 plugins:
   - search

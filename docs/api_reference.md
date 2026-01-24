@@ -1,5 +1,5 @@
 # API Reference
-**Version: 1.0.2**
+**Version: 1.0.3**
 
 This document provides a comprehensive reference for the LNT SDK and core data structures.
 
@@ -51,4 +51,4 @@ Performs a deterministic audit of a structured proposal.
 ### HTTP Headers (Remote Mode)
 When using the REST API directly:
 *   `X-LNT-API-KEY`: Your authentication token.
-*   `User-Agent`: `LNT-Python-SDK/1.0.2`.
+*   `User-Agent`: `LNT-Python-SDK/1.0.3`.

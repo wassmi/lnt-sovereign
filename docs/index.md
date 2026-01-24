@@ -1,5 +1,5 @@
 # LNT Documentation Portal
-**Version: 1.0.2**
+**Version: 1.0.3**
 
 Welcome to the technical documentation for the **Logic Neutrality Tensor (LNT)**. LNT is a deterministic validation layer designed for high-assurance AI systems.
 
@@ -13,11 +13,10 @@ LNT is built on three engineering pillars to ensure safety in production environ
 ## 📚 Documentation Modules
 Navigate the technical sections of the LNT engine:
 
+*   [**MLOps Integration Guide**](mlops_integration.md): How to set up LNT as a "Logic Gate" in CI/CD.
 *   [**Whitepaper**](whitepaper.md): Mathematical complexity, latency distributions, and the formal verification workflow.
 *   [**API Reference**](api_reference.md): Complete SDK specification, parameter registries, and unified error codes.
 *   [**System Architecture**](architecture.md): High-level system design and component relationships.
-*   [**Validation Standards**](specifications.md): Technical definitions of SG-1 (Symbolic) and SG-2 (Temporal) compliance.
-*   [**Integration Guide**](integration.md): Deployment patterns, performance tuning, and persistent state management.
 *   [**Architecture Decision Records (ADRs)**](adr_001.md): Documentation of core technical trade-offs and engineering decisions.
 
 ## 🛡️ Security & Auditability
@@ -31,6 +30,6 @@ Trust is established through transparency and immutable evidence:
 ```bash
 pip install lnt-sovereign
 ```
-Refer to the [**API Reference**](api_reference.md) for basic implementation examples.
+Refer to the [**README**](../README.md) for basic implementation examples.
 
-*LNT is proprietary software maintained for high-reliability AI development.*
+*LNT is an open-source project maintained for high-reliability AI development.*
