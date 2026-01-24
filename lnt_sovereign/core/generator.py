@@ -8,11 +8,11 @@ class ManifestFactory:
     """
     Generates Sovereign Grade manifests with 1,000 rules across diverse domains.
     """
-    def __init__(self, output_dir: str = "lnt_sovereign/manifests/mega"):
+    def __init__(self, output_dir: str = "lnt_sovereign/manifests/mega") -> None:
         self.output_dir = output_dir
         os.makedirs(output_dir, exist_ok=True)
 
-    def generate_domain(self, domain_id: str, domain_name: str, entities: List[str], rule_count: int = 1000):
+    def generate_domain(self, domain_id: str, domain_name: str, entities: List[str], rule_count: int = 1000) -> None:
         """
         Generates a massive manifest with a mix of simple, weighted, and dependent rules.
         """

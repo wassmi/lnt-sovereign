@@ -1,8 +1,8 @@
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from lnt_sovereign.core.topology import SynthesisManifold
 
 class AgentMessage:
-    def __init__(self, sender: str, content: str, metadata: Dict[str, Any] = None):
+    def __init__(self, sender: str, content: str, metadata: Optional[Dict[str, Any]] = None) -> None:
         self.sender = sender
         self.content = content
         self.metadata = metadata or {}
@@ -14,7 +14,7 @@ class ProverAgent:
     PROS: Intuitive, fast.
     CONS: Prone to hallucinations.
     """
-    def __init__(self, name: str = "PROVER_01"):
+    def __init__(self, name: str = "PROVER_01") -> None:
         self.name = name
 
     def propose(self, user_text: str) -> AgentMessage:
@@ -27,7 +27,7 @@ class VerifierAgent:
     The 'Sovereign' auditor agent.
     Strictly bounded by the LNT Synthesis Manifold.
     """
-    def __init__(self, name: str = "VERIFIER_SOVEREIGN"):
+    def __init__(self, name: str = "VERIFIER_SOVEREIGN") -> None:
         self.name = name
         self.manifold = SynthesisManifold()
 
@@ -52,11 +52,11 @@ class AgentOrchestrator:
     """
     Manages the 'Reviewer-Constitutional' loop.
     """
-    def __init__(self):
+    def __init__(self) -> None:
         self.prover = ProverAgent()
         self.verifier = VerifierAgent()
 
-    def execute_workflow(self, user_text: str):
+    def execute_workflow(self, user_text: str) -> Dict[str, Any]:
         # 1. Prover makes a proposal
         proposal = self.prover.propose(user_text)
         

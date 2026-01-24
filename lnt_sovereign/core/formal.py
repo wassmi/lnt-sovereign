@@ -21,11 +21,11 @@ class FormalVerifier:
     Provides mathematical guarantees about manifest correctness.
     """
     
-    def __init__(self):
+    def __init__(self) -> None:
         self.solver = Solver()
         self.variables: Dict[str, Any] = {}
     
-    def _create_variable(self, entity: str, var_type: str = "real"):
+    def _create_variable(self, entity: str, var_type: str = "real") -> Any:
         """Create a Z3 variable for an entity."""
         if entity not in self.variables:
             if var_type == "int":
@@ -36,7 +36,7 @@ class FormalVerifier:
                 self.variables[entity] = Real(entity)
         return self.variables[entity]
     
-    def _constraint_to_z3(self, constraint: Dict[str, Any]):
+    def _constraint_to_z3(self, constraint: Dict[str, Any]) -> Any:
         """Convert a manifest constraint to Z3 formula."""
         entity = constraint["entity"]
         operator = constraint["operator"]
@@ -268,7 +268,8 @@ class FormalVerifier:
         
         # If UNSAT, the implication holds
         result = self.solver.check()
-        return result == unsat
+        is_unsat: bool = result == unsat
+        return is_unsat
 
 
 def verify_manifest_file(filepath: str) -> Dict[str, Any]:

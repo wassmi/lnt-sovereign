@@ -1,10 +1,10 @@
 import time
 from collections import deque
-from typing import Dict, List
+from typing import Dict, List, Any, Deque
 import numpy as np
 
 class StateEntry:
-    def __init__(self, value: float, timestamp: float):
+    def __init__(self, value: float, timestamp: float) -> None:
         self.value = value
         self.timestamp = timestamp
 
@@ -13,11 +13,11 @@ class SovereignStateBuffer:
     High-performance, in-memory state buffer for Temporal Sovereign Logic.
     Supports sliding windows for averages and frequency detection.
     """
-    def __init__(self, max_history: int = 10000):
-        self.buffer: Dict[str, deque] = {} # entity_id -> deque[StateEntry]
+    def __init__(self, max_history: int = 10000) -> None:
+        self.buffer: Dict[str, Deque[StateEntry]] = {} # entity_id -> deque[StateEntry]
         self.max_history = max_history
 
-    def push(self, entity: str, value: float):
+    def push(self, entity: str, value: float) -> None:
         """Pushes a new state entry into the entity buffer."""
         if entity not in self.buffer:
             self.buffer[entity] = deque(maxlen=self.max_history)

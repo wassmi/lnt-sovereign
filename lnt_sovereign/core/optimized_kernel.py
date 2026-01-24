@@ -22,7 +22,8 @@ class OptimizedKernel:
     def evaluate(self, proposal: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Standard evaluation: Returns only violations."""
         res = self.trace_evaluate(proposal)
-        return res["violations"]
+        violations: List[Dict[str, Any]] = res["violations"]
+        return violations
 
     def trace_evaluate(self, proposal: Dict[str, Any]) -> Dict[str, Any]:
         """

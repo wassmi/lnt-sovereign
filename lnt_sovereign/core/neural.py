@@ -29,7 +29,7 @@ class NeuralParser:
         Extracts entities from user text.
         Mock implementation designed for deterministic test passes.
         """
-        proposal = {}
+        proposal: Dict[str, Any] = {}
         text = user_text.lower()
         
         for entity in manifest.entities:

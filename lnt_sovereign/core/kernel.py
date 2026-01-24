@@ -1,10 +1,10 @@
 from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, ConfigDict, field_validator
-from enum import StrEnum
+from enum import Enum
 import json
 from lnt_sovereign.core.exceptions import EvaluationError
 
-class ConstraintOperator(StrEnum):
+class ConstraintOperator(str, Enum):
     GT = "GT"
     LT = "LT"
     EQ = "EQ"
@@ -66,7 +66,8 @@ class KernelEngine:
     def evaluate(self, proposal: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Evaluates a proposal against the loaded manifest. Returns only violations."""
         res = self.trace_evaluate(proposal)
-        return res["violations"]
+        violations: List[Dict[str, Any]] = res["violations"]
+        return violations
 
     def trace_evaluate(self, proposal: Dict[str, Any]) -> Dict[str, Any]:
         """

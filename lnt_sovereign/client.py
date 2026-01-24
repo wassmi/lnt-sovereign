@@ -2,7 +2,7 @@ import httpx
 import asyncio
 import logging
 import os
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, cast
 from dataclasses import dataclass
 
 logging.basicConfig(level=logging.INFO)
@@ -85,7 +85,7 @@ class LNTClient:
             try:
                 response = await client.post("/process", json=payload)
                 response.raise_for_status()
-                return response.json()
+                return cast(Dict[str, Any], response.json())
             except (httpx.ConnectError, httpx.TimeoutException) as e:
                 if attempt == self.max_retries - 1:
                     logger.error(f"LNT connection failed after {self.max_retries} attempts: {str(e)}")
@@ -150,7 +150,7 @@ class LNTClient:
         try:
             response = await client.get("/ops")
             response.raise_for_status()
-            return response.json()
+            return cast(Dict[str, Any], response.json())
         except Exception as e:
             return {"status": "ERROR", "error": str(e)}
 
@@ -160,7 +160,7 @@ class LNTClient:
         try:
             response = await client.get("/analytics/summary")
             response.raise_for_status()
-            return response.json()
+            return cast(Dict[str, Any], response.json())
         except Exception as e:
             return {"status": "ERROR", "error": str(e)}
 

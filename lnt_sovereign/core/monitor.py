@@ -1,4 +1,4 @@
-from typing import Dict, Any, List, Deque
+from typing import Dict, Any, List, Deque, Optional
 import time
 from collections import deque
 
@@ -18,7 +18,7 @@ class SovereignMonitor:
         domain: str, 
         is_safe: bool, 
         score: float = 0.0, 
-        violations: List[Dict[str, Any]] = None,
+        violations: Optional[List[Dict[str, Any]]] = None,
         latency_ms: float = 0.0
     ) -> None:
         """Standardized logging for agnostic domain events with rich metrics."""

@@ -18,6 +18,7 @@ jobs:
         cache: 'pip'
     - name: Install dependencies
       run: |
+        pip install -e .
         pip install ruff mypy
     - name: Run Ruff
       run: ruff check .

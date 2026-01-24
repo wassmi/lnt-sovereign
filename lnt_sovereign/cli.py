@@ -19,7 +19,7 @@ def check(
     fail_on_toxic: bool = typer.Option(False, "--fail-on-toxic", help="Exit with code 1 if any TOXIC violation occurs"),
     advisory: bool = typer.Option(False, "--advisory", help="Soft governance mode: always exit with code 0"),
     json_report: Optional[str] = typer.Option(None, "--json-report", help="Path to export the full machine-readable audit report")
-):
+) -> None:
     """
     Evaluate an AI proposal against a symbolic logic manifest.
     """
@@ -53,9 +53,18 @@ def check(
     status = results["status"]
 
     # --- UI Reporting ---
+    domain_id = "UNKNOWN"
+    domain_name = "UNKNOWN"
+    domain_version = "UNKNOWN"
+    
+    if engine.manifest:
+        domain_id = engine.manifest.domain_id
+        domain_name = engine.manifest.domain_name
+        domain_version = engine.manifest.version
+
     console.print(Panel(
-        f"[bold blue]Domain:[/bold blue] {engine.manifest.domain_name} ({engine.manifest.domain_id})\n"
-        f"[bold blue]Version:[/bold blue] {engine.manifest.version}\n"
+        f"[bold blue]Domain:[/bold blue] {domain_name} ({domain_id})\n"
+        f"[bold blue]Version:[/bold blue] {domain_version}\n"
         f"[bold blue]Status:[/bold blue] {status}",
         title="LNT Sovereign Audit Summary",
         border_style="cyan"
@@ -120,7 +129,7 @@ def check(
         console.print("\n[bold green]✔ Compliance Validation Successful.[/bold green]")
 
 @app.command()
-def version():
+def version() -> None:
     """Display LNT Engine Version info."""
     console.print("LNT Sovereign [bold cyan]v1.0.3[/bold cyan]")
     console.print("Core Technology: BELM (Bit-Encoded Logic Manifolds)")

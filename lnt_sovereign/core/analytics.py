@@ -63,7 +63,7 @@ class SovereignAnalyticsEngine:
         heatmap = self.get_violation_heatmap()
         perf = self.get_performance_stats()
         
-        top_violation = max(heatmap, key=heatmap.get) if heatmap else "None"
+        top_violation = max(heatmap, key=lambda k: heatmap[k]) if heatmap else "None"
         
         return {
             "overall_status": ops["sovereign_status"],
