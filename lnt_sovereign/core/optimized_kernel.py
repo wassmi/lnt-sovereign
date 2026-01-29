@@ -118,7 +118,7 @@ class OptimizedKernel:
     def _get_violation_mask(self) -> np.ndarray:
         """Matrix-based bounds check."""
         c_state = self._state_vec[self._c_indices]
-        return (c_state < self.bounds[:, 0]) | (c_state > self.bounds[:, 1])
+        return (c_state < self.bounds[:, 0]) | (c_state > self.bounds[:, 1]) # type: ignore
 
     def _build_violations(self, violation_mask: np.ndarray) -> List[Dict[str, Any]]:
         """Convert mask back to readable violations."""
