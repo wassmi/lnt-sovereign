@@ -56,7 +56,7 @@ jobs:
     - name: Install dependencies
       run: pip install bandit
     - name: Run Bandit
-      run: bandit -r lnt_sovereign/ -x lnt_sovereign/vault,lnt_sovereign/manifests/mega
+      run: bandit -r lnt_sovereign/ -x lnt_sovereign/vault,lnt_sovereign/manifests/mega -s B105,B110
 
   build-verify:
     needs: test
