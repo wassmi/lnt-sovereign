@@ -55,6 +55,7 @@ jobs:
         python-version: '3.11'
     - name: Install dependencies
       run: pip install bandit
+    - name: Run Bandit
       run: bandit -r lnt_sovereign/ -x lnt_sovereign/vault,lnt_sovereign/manifests/mega -s B105,B110,B112
 
   build-verify:
