@@ -29,7 +29,8 @@ dependencies = [
     "httpx",
     "z3-solver",
     "typer[all]",
-    "rich"
+    "rich",
+    "lmdb"
 ]
 
 [project.optional-dependencies]
