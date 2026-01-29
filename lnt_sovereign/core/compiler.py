@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import Any, Dict, List, cast
 
 import numpy as np
 from pydantic import BaseModel, ConfigDict
@@ -94,7 +94,7 @@ class LNTCompiler:
         id_to_idx = {m["id"]: i for i, m in enumerate(metadata)}
         
         for i, m in enumerate(metadata):
-            for dep_id in m["conditional_on"]:
+            for dep_id in cast(List[str], m["conditional_on"]):
                 if dep_id in id_to_idx:
                     dep_idx = id_to_idx[dep_id]
                     dep_matrix[dep_idx, i] = True # i depends on dep_idx

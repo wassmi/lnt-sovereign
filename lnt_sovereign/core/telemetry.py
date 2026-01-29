@@ -26,15 +26,16 @@ class TelemetryManager:
     """
     _instance = None
     _lock = threading.Lock()
+    _initialized: bool
 
-    def __new__(cls):
+    def __new__(cls) -> "TelemetryManager":
         with cls._lock:
             if cls._instance is None:
                 cls._instance = super(TelemetryManager, cls).__new__(cls)
                 cls._instance._initialized = False
             return cls._instance
 
-    def __init__(self):
+    def __init__(self) -> None:
         if self._initialized:
             return
         
@@ -51,7 +52,7 @@ class TelemetryManager:
         self._init_db()
         self._initialized = True
 
-    def _load_config(self):
+    def _load_config(self) -> None:
         config_path = self.home_dir / "config.json"
         if config_path.exists():
             try:
@@ -62,7 +63,7 @@ class TelemetryManager:
             except Exception:
                 pass
 
-    def _init_db(self):
+    def _init_db(self) -> None:
         """Initialize the local SQLite store."""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -87,7 +88,7 @@ class TelemetryManager:
         latency_ms: float, 
         error_type: Optional[str] = None,
         metadata: Optional[Dict[str, Any]] = None
-    ):
+    ) -> None:
         """Main entry point for logging engine events."""
         event = TelemetryEvent(
             event_id=str(uuid.uuid4()),
@@ -106,7 +107,7 @@ class TelemetryManager:
         if not self.opt_out:
             threading.Thread(target=self._dispatch_remote, args=(event,), daemon=True).start()
 
-    def _save_local(self, event: TelemetryEvent):
+    def _save_local(self, event: TelemetryEvent) -> None:
         """Save event to local SQLite DB."""
         try:
             conn = sqlite3.connect(self.db_path)
@@ -128,23 +129,13 @@ class TelemetryManager:
         except Exception:
             pass
 
-    def _dispatch_remote(self, event: TelemetryEvent):
+    def _dispatch_remote(self, event: TelemetryEvent) -> None:
         """
         Send anonymous metadata to the improvement endpoint.
         NOTE: This is a stub for the quality improvement research.
         In production, this would ping an LNT endpoint.
         """
         # Scrubbed metadata for remote improvemnt
-        payload = {
-            "token": "anonymous_lnt_improvement_v1",
-            "cmd": event.command,
-            "success": event.success,
-            "latency": round(event.latency_ms, 2),
-            "err": event.error_type,
-            "os": os.name,
-            "host_id": "scrubbed" # Hostname removed for PII compliance
-        }
-        # In actual deployment, we'd use httpx to POST this.
         # For now, we remain a silent observer.
         pass
 
@@ -158,7 +149,7 @@ class TelemetryManager:
         conn.close()
         return [dict(row) for row in rows]
 
-    def clear_local_stats(self):
+    def clear_local_stats(self) -> None:
         """Purge local telemetry."""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()

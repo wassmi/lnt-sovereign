@@ -365,7 +365,7 @@ telemetry_app = typer.Typer(help="Manage LNT Telemetry & Opt-Out settings")
 app.add_typer(telemetry_app, name="telemetry")
 
 @telemetry_app.command("status")
-def telemetry_status():
+def telemetry_status() -> None:
     """Show current telemetry usage and opt-out status."""
     manager = TelemetryManager()
     status = "[red]Opted-Out[/red]" if manager.opt_out else "[green]Active (Anonymous Improvement)[/green]"
@@ -378,7 +378,7 @@ def telemetry_status():
     ))
 
 @telemetry_app.command("list")
-def telemetry_list(limit: int = typer.Option(10, "--limit", help="Number of entries to show")):
+def telemetry_list(limit: int = typer.Option(10, "--limit", help="Number of entries to show")) -> None:
     """List recent local telemetry events."""
     manager = TelemetryManager()
     stats = manager.get_local_stats()
@@ -401,7 +401,7 @@ def telemetry_list(limit: int = typer.Option(10, "--limit", help="Number of entr
     console.print(table)
 
 @telemetry_app.command("clear")
-def telemetry_clear():
+def telemetry_clear() -> None:
     """Purge all local telemetry data."""
     if typer.confirm("Are you sure you want to delete all local telemetry history?"):
         TelemetryManager().clear_local_stats()

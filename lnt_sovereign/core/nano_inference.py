@@ -13,14 +13,15 @@ class NanoNER:
     Ensures 100% local, low-latency execution.
     """
     _instance = None
+    _initialized: bool
     
-    def __new__(cls):
+    def __new__(cls) -> "NanoNER":
         if cls._instance is None:
             cls._instance = super(NanoNER, cls).__new__(cls)
             cls._instance._initialized = False
         return cls._instance
 
-    def __init__(self):
+    def __init__(self) -> None:
         if self._initialized:
             return
         self._initialized = True

@@ -49,9 +49,9 @@ class BiasAuditor:
                 ratio = (min_rate / max_rate) if max_rate > 0 else 1.0
                 if ratio < self.fairness_threshold:
                     status = "INVESTIGATION_REQUIRED"
-                trait_report["disparate_impact_ratio"] = round(ratio, 2)
+                trait_report["disparate_impact_ratio"] = round(ratio, 2) # type: ignore
             
-            trait_report["status"] = status
+            trait_report["status"] = status # type: ignore
             report[trait] = trait_report
             
         return report
