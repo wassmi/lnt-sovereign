@@ -1,5 +1,4 @@
 import os
-import shutil
 
 from lnt_sovereign.core.state import LNTStateBuffer
 

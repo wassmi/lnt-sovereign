@@ -60,7 +60,7 @@ class TelemetryManager:
                     config = json.load(f)
                     if config.get("telemetry") is False:
                         self.opt_out = True
-            except Exception:
+            except Exception:  # noqa: S110
                 pass
 
     def _init_db(self) -> None:
@@ -126,7 +126,7 @@ class TelemetryManager:
             )
             conn.commit()
             conn.close()
-        except Exception:
+        except Exception:  # noqa: S110
             pass
 
     def _dispatch_remote(self, event: TelemetryEvent) -> None:

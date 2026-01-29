@@ -1,3 +1,4 @@
+import os
 from typing import Any, Dict, Optional
 
 from fastapi import Body, FastAPI, Header, HTTPException
@@ -6,9 +7,6 @@ from lnt_sovereign.core.topology import TopologyOrchestrator
 
 app = FastAPI(title="LNT Logic Evaluation Engine")
 manifold = TopologyOrchestrator()
-
-# Internal API Registry (Loaded from Environment)
-import os
 
 API_KEYS = {
     os.getenv("LNT_ADMIN_KEY", "lnt-admin-key-2026"): "ADMIN",

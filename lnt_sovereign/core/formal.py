@@ -176,7 +176,7 @@ class FormalVerifier:
                     try:
                         # Fallback for RatNum or other numeric types
                         example[entity] = float(val.as_fraction().numerator) / float(val.as_fraction().denominator)
-                    except:
+                    except Exception:
                         example[entity] = str(val)
             return True, example
         else:

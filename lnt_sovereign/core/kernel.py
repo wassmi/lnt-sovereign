@@ -109,7 +109,7 @@ class KernelEngine:
             if self.state_buffer and entity_val is not None:
                 try:
                     self.state_buffer.push(constraint.entity, float(entity_val))
-                except Exception: # nosec B110 # Ignore if non-numeric
+                except Exception:  # noqa: S110
                     pass
 
             # 2. Temporal Context Resolution

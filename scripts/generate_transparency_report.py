@@ -1,9 +1,10 @@
 import os
 import sqlite3
+import sys
 from datetime import datetime
+from lnt_sovereign.core.bias import BiasAuditor
 
-
-def generate_transparency_report(db_path: str = "lnt_sovereign.db", output_dir: str = "compliance_reports"):
+def generate_aida_report():
     """
     Generates a technical transparency report for logic audits.
     """

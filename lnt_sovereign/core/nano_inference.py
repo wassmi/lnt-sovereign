@@ -42,7 +42,6 @@ class NanoNER:
             
             # 2. Look for explicit mentions or fuzzy matches
             # We look for the entity name or its natural variation in the text
-            best_match = None
             if HAS_RAPIDFUZZ:
                 # Find the best matching word/phrase for the entity label
                 match = process.extractOne(natural_label, words, scorer=fuzz.WRatio)
