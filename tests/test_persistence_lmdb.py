@@ -1,4 +1,5 @@
 import os
+import shutil
 
 from lnt_sovereign.core.state import LNTStateBuffer
 
@@ -6,7 +7,7 @@ from lnt_sovereign.core.state import LNTStateBuffer
 def test_lmdb_persistence():
     db_path = ".test_lnt_state"
     if os.path.exists(db_path):
-        import shutil
+        pass
         shutil.rmtree(db_path)
     
     # 1. Start buffer and push data

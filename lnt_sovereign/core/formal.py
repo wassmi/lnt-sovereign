@@ -155,7 +155,7 @@ class FormalVerifier:
             try:
                 z3_constraint = self._constraint_to_z3(c)
                 self.solver.add(z3_constraint)
-            except Exception:  # noqa: S112
+            except Exception:  # nosec B112  # noqa: S112
                 continue
         
         result = self.solver.check()
