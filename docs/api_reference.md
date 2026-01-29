@@ -7,7 +7,7 @@ This document provides a comprehensive reference for the LNT SDK and core data s
 The `LNTClient` is the primary interface for auditing proposals against logic manifests.
 
 ### `LNTClient(api_key: Optional[str] = None, ...)`
-*   **api_key**: (str) Required for remote evaluation via Sovereign Cloud. If `None`, the client defaults to local "Toolbox" mode.
+*   **api_key**: (str) Required for remote evaluation. If `None`, the client defaults to local "Toolbox" mode.
 *   **base_url**: (str) URL of the LNT endpoint (default: `http://localhost:8000`).
 *   **timeout**: (float) Request timeout in seconds.
 *   **max_retries**: (int) Number of connection retries before failing.
@@ -51,4 +51,4 @@ Performs a deterministic audit of a structured proposal.
 ### HTTP Headers (Remote Mode)
 When using the REST API directly:
 *   `X-LNT-API-KEY`: Your authentication token.
-*   `User-Agent`: `LNT-Python-SDK/1.0.3`.
+*   `User-Agent`: `LNT-Python-SDK/1.1.0`.

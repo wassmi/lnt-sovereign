@@ -1,4 +1,4 @@
-site_name: LNT Sovereign Grade
+site_name: LNT-Sovereign Grade
 site_description: High-performance Neuro-Symbolic Verification for the AI Age.
 theme:
   name: material
@@ -16,10 +16,12 @@ theme:
 nav:
   - Home: index.md
   - Integration Guide: mlops_integration.md
-  - Technical Whitepaper: whitepaper.md
-  - System Architecture: architecture.md
+  - The FAQ Portal: faq.md
+  - Interactive Playground: playground.md
   - API Reference: api_reference.md
+  - System Architecture: architecture.md
   - Engineering Records (ADRs): adr_001.md
+  - Technical Whitepaper: whitepaper.md
 
 plugins:
   - search

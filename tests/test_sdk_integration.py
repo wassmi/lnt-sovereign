@@ -1,7 +1,8 @@
 import pytest
 from fastapi.testclient import TestClient
-from server import app
+
 from lnt_sovereign.client import LNTClient
+from server import app
 
 client = TestClient(app)
 
@@ -24,7 +25,7 @@ async def test_sdk_full_audit_workflow(sdk_client):
     
     # Direct server test via TestClient
     payload = {
-        "user_text": "Visa application for John Doe. Passport valid. Funding: $50,000. Language CLB 9.",
+        "user_text": "Visa application. has_valid_passport: 1. funding_available: 50000. language_proficiency: 9.",
         "domain_override": "VISA"
     }
     headers = {"X-LNT-API-KEY": "lnt-verifier-key-2026"}
@@ -74,7 +75,7 @@ async def test_sdk_rbac_enforcement(sdk_client):
 @pytest.mark.asyncio
 async def test_sdk_trace_integrity(sdk_client):
     """Verifies the integrity of the Reasoning Trace."""
-    payload = {"user_text": "Healthy patient. hr: 70. spo2: 98."}
+    payload = {"user_text": "Healthy patient. heart_rate: 70. oxygen_saturation: 98."}
     headers = {"X-LNT-API-KEY": "lnt-verifier-key-2026"}
     
     response = client.post("/process", json=payload, headers=headers)

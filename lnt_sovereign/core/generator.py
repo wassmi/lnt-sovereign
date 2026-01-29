@@ -2,11 +2,13 @@ import json
 import os
 import random
 from typing import List
-from lnt_sovereign.core.kernel import DomainManifest, ManifestConstraint, ConstraintOperator
+
+from lnt_sovereign.core.kernel import ConstraintOperator, DomainManifest, ManifestConstraint
+
 
 class ManifestFactory:
     """
-    Generates Sovereign Grade manifests with 1,000 rules across diverse domains.
+    Generates test manifests with 1,000 rules across diverse domains.
     """
     def __init__(self, output_dir: str = "lnt_sovereign/manifests/mega") -> None:
         self.output_dir = output_dir
@@ -51,7 +53,7 @@ class ManifestFactory:
                 entity=target_entity,
                 operator=op,
                 value=val,
-                description=f"Sovereign constraint {rid} governing {target_entity}",
+                description=f"Logical constraint {rid} governing {target_entity}",
                 severity=random.choice(["TOXIC", "WARNING", "IMPOSSIBLE"]), # nosec B311
                 weight=round(random.uniform(0.1, 0.8), 2), # nosec B311
                 conditional_on=deps
@@ -76,49 +78,49 @@ if __name__ == "__main__":
     
     # 4. Energy Grid
     factory.generate_domain(
-        "SOVEREIGN_ENERGY_GRID", 
+        "LNT_ENERGY_GRID", 
         "Energy Load Balancing & Grid Manifest", 
         ["load_kw", "freq_hz", "reactive_power", "temp_ambient", "storage_level"]
     )
 
     # 5. Supply Chain
     factory.generate_domain(
-        "SOVEREIGN_LOGISTICS", 
+        "LNT_LOGISTICS", 
         "Global Supply Chain Integrity", 
         ["lat", "lon", "temp", "humidity", "shocks", "transit_time_min"]
     )
 
     # 6. Legal / Contract
     factory.generate_domain(
-        "SOVEREIGN_LEGAL_DAG", 
+        "LNT_LEGAL_DAG", 
         "Autonomous Contract Logic Auditor", 
         ["clause_entropy", "liability_cap", "indemnity_depth", "termination_lookahead"]
     )
 
     # 7. Autonomous Driving
     factory.generate_domain(
-        "SOVEREIGN_DRIVE_CORE", 
+        "LNT_DRIVE_CORE", 
         "L3 Autonomous Sensor Fusion Gatekeeper", 
         ["lidar_res", "radar_dist", "camera_confidence", "velocity", "steering_angle"]
     )
 
     # 8. AGI Safety
     factory.generate_domain(
-        "SOVEREIGN_AGI_GUARD", 
+        "LNT_AGI_GUARD", 
         "Neural-Symbolic Entropy Sentry", 
         ["token_entropy", "semantic_drift", "alignment_score", "prompt_injection_prob"]
     )
 
-    # 9. Sovereign Reserve
+    # 9. LNT Reserve
     factory.generate_domain(
-        "SOVEREIGN_CENTRAL_BANK", 
+        "LNT_CENTRAL_BANK", 
         "Central Bank Macro-Audit Manifest", 
         ["m1_velocity", "inflation_delta", "curr_reserve", "treasury_spread"]
     )
 
-    # 10. Federal Immigration
+    # 10. Immigration Research
     factory.generate_domain(
-        "SOVEREIGN_IMMIGRATION_AIDA", 
-        "Federal Immigration & Security Manifest", 
+        "LNT_IMMIGRATION_PROTOTYPE", 
+        "Immigration & Security Manifest Prototype", 
         ["is_terror_watch", "criminal_record", "funding_available", "language_clb", "years_exp"]
     )

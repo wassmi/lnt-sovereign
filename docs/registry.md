@@ -1,6 +1,6 @@
 # The 10,000 Rule Registry
 
-LNT Sovereign Grade (SG-1) includes a pre-certified registry of 10,000 symbolic constraints across 10 critical industrial domains.
+LNT includes a test registry of 10,000 symbolic constraints across multiple industrial domains for research purposes.
 
 ## 📁 Registry Domains
 

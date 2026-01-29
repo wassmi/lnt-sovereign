@@ -1,8 +1,9 @@
-from typing import Dict, Any
 import os
 from datetime import datetime
+from typing import Any, Dict
 
-class SovereignDashboardGenerator:
+
+class LNTDashboardGenerator:
     """
     Generates high-impact visual decision reports for LNT.
     Transforms raw analytics into actionable insights.
@@ -12,14 +13,14 @@ class SovereignDashboardGenerator:
         os.makedirs(self.output_dir, exist_ok=True)
 
     def generate_html_report(self, summary: Dict[str, Any], heatmap: Dict[str, int]) -> str:
-        """Creates a standalone HTML dashboard for the Sovereign Portal."""
+        """Creates a standalone HTML dashboard for the LNT Portal."""
         
         # Simple CSS-heavy dashboard template
         html = f"""
         <!DOCTYPE html>
         <html>
         <head>
-            <title>LNT Sovereign Health Report</title>
+            <title>LNT Logic Health Report</title>
             <style>
                 body {{ font-family: 'Inter', sans-serif; background: #0f172a; color: #f8fafc; padding: 40px; }}
                 .container {{ max-width: 1000px; margin: 0 auto; }}
@@ -36,15 +37,15 @@ class SovereignDashboardGenerator:
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>Sovereign Grade Intelligence Report</h1>
+                    <h1>LNT Logic Intelligence Report</h1>
                     <p>Generated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}</p>
                     <p class="status-certified">Status: {summary['overall_status']}</p>
                 </div>
                 
                 <div class="grid">
                     <div class="card">
-                        <div class="label">Hallucination Rate</div>
-                        <div class="metric">{summary['hallucination_rate']}</div>
+                        <div class="label">Violation Rate</div>
+                        <div class="metric">{summary['violation_rate']}</div>
                     </div>
                     <div class="card">
                         <div class="label">Avg Latency</div>
@@ -65,7 +66,7 @@ class SovereignDashboardGenerator:
         </html>
         """
         
-        output_path = os.path.join(self.output_dir, "sovereign_health.html")
+        output_path = os.path.join(self.output_dir, "lnt_health.html")
         with open(output_path, "w") as f:
             f.write(html)
         

@@ -1,6 +1,8 @@
 import time
+
 from lnt_sovereign.core.kernel import KernelEngine
 from lnt_sovereign.core.neural import NeuralParser
+
 
 def run_benchmark():
     print("--- LNT Benchmark: Classical ML vs. Neuro-Symbolic (LLM) ---")

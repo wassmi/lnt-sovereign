@@ -1,5 +1,6 @@
 from lnt_sovereign.core.kernel import KernelEngine
 
+
 def test_kernel_healthcare_pass():
     """Test that valid vitals pass healthcare triage"""
     engine = KernelEngine("lnt_sovereign/manifests/examples/healthcare_triage.json")

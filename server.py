@@ -1,16 +1,22 @@
-from fastapi import FastAPI, Header, HTTPException, Body
-from typing import Optional, Dict, Any
-from lnt_sovereign.core.topology import SynthesisManifold
+from typing import Any, Dict, Optional
 
-app = FastAPI(title="LNT Sovereign Engine")
-manifold = SynthesisManifold()
+from fastapi import Body, FastAPI, Header, HTTPException
 
-# Internal API Registry (Hardened for AIDA Release)
+from lnt_sovereign.core.topology import TopologyOrchestrator
+
+app = FastAPI(title="LNT Logic Evaluation Engine")
+manifold = TopologyOrchestrator()
+
+# Internal API Registry (Loaded from Environment)
+import os
+
 API_KEYS = {
-    "lnt-admin-key-2026": "ADMIN",
-    "lnt-verifier-key-2026": "VERIFIER",
-    "lnt-auditor-key-2026": "AUDITOR"
+    os.getenv("LNT_ADMIN_KEY", "lnt-admin-key-2026"): "ADMIN",
+    os.getenv("LNT_VERIFIER_KEY", "lnt-verifier-key-2026"): "VERIFIER",
+    os.getenv("LNT_AUDITOR_KEY", "lnt-auditor-key-2026"): "AUDITOR"
 }
+# Filter out None keys if any env var is missing and no default provided
+API_KEYS = {k: v for k, v in API_KEYS.items() if k is not None}
 
 @app.post("/process")
 async def process(
@@ -35,7 +41,7 @@ async def process(
     # 4. Shadow Mode Transformation
     if shadow_mode:
         original_status = result["status"]
-        if original_status == "REJECTED_BY_SOVEREIGN_LOGIC":
+        if original_status == "REJECTED_BY_LOGIC":
             result["status"] = "SHADOW_REJECTED"
         result["shadow_mode"] = True
 
@@ -56,7 +62,7 @@ async def ops() -> Dict[str, Any]:
 
 @app.get("/analytics/summary")
 async def analytics_summary() -> Dict[str, Any]:
-    """Sovereign analytics rollup."""
+    """LNT analytics rollup."""
     return manifold.analytics.generate_health_summary()
 
 if __name__ == "__main__":

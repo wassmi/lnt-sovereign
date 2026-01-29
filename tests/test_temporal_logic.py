@@ -1,9 +1,11 @@
 import pytest
-from lnt_sovereign.core.topology import SynthesisManifold
+
+from lnt_sovereign.core.topology import TopologyOrchestrator
+
 
 @pytest.fixture
 def manifold():
-    return SynthesisManifold()
+    return TopologyOrchestrator()
 
 def test_temporal_trailing_average(manifold):
     """
@@ -47,7 +49,7 @@ def test_temporal_trailing_average(manifold):
     # Wait, if we push 50k now, the average becomes > 20k.
     
     # Let's test a FAIL case:
-    manifold.state_buffer.buffer["funding"].clear()
+    manifold.state_buffer.clear_entity("funding")
     manifold.state_buffer.push("funding", 5000)
     manifold.state_buffer.push("funding", 5000)
     
@@ -70,6 +72,6 @@ def test_micro_temporal_frequency(manifold):
 
 if __name__ == "__main__":
     # Quick manual run
-    m = SynthesisManifold()
+    m = TopologyOrchestrator()
     test_temporal_trailing_average(m)
     print("Temporal Logic Test: PASSED")

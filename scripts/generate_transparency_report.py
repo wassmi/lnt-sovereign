@@ -1,10 +1,11 @@
+import os
 import sqlite3
 from datetime import datetime
-import os
 
-def generate_aida_report(db_path: str = "lnt_sovereign.db", output_dir: str = "compliance_reports"):
+
+def generate_transparency_report(db_path: str = "lnt_sovereign.db", output_dir: str = "compliance_reports"):
     """
-    Generates a Sovereign Transparency Report for AIDA / Bill C-27 compliance.
+    Generates a technical transparency report for logic audits.
     """
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -27,7 +28,7 @@ def generate_aida_report(db_path: str = "lnt_sovereign.db", output_dir: str = "c
         avg_bias_score = cursor.fetchone()[0] or 1.0
 
         # 2. Build Markdown Report
-        report_content = f"""# LNT Sovereign Transparency Report
+        report_content = f"""# LNT Logic Transparency Report
 Generated: {datetime.now().isoformat()}
 Regulatory Framework: Bill C-27 (AIDA 2026)
 

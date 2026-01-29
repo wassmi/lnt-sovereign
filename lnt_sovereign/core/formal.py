@@ -8,11 +8,11 @@ Uses Z3 SMT solver to:
 3. Generate counterexamples when constraints are impossible
 """
 
-from z3 import (
-    Solver, Int, Real, Bool, And, Or, Not, sat, unsat
-)
-from typing import Dict, Any, Tuple, Optional
+import hashlib
 import json
+from typing import Any, Dict, List, Optional, Tuple
+
+from z3 import And, Bool, Int, Not, Or, Real, Solver, sat, unsat
 
 
 class FormalVerifier:
@@ -21,8 +21,9 @@ class FormalVerifier:
     Provides mathematical guarantees about manifest correctness.
     """
     
-    def __init__(self) -> None:
+    def __init__(self, timeout_ms: int = 10000) -> None:
         self.solver = Solver()
+        self.solver.set("timeout", timeout_ms)
         self.variables: Dict[str, Any] = {}
     
     def _create_variable(self, entity: str, var_type: str = "real") -> Any:
@@ -50,13 +51,21 @@ class FormalVerifier:
             var = self._create_variable(entity, "bool")
             return var == value
         elif operator == "EQ" and isinstance(value, str):
-            # For string equality, we can't directly model in Z3
-            # Use integer encoding as proxy
+            # For string equality, use deterministic SHA256 hashing
             var = self._create_variable(entity, "int")
-            return var == hash(value) % 1000000
+            # Convert hash to int for Z3
+            hash_int = int(hashlib.sha256(value.encode()).hexdigest(), 16) % 10**8
+            return var == hash_int
         elif operator == "IN" and isinstance(value, list):
             var = self._create_variable(entity, "int")
-            return Or([var == (hash(v) % 1000000 if isinstance(v, str) else v) for v in value])
+            z3_values = []
+            for v in value:
+                if isinstance(v, str):
+                    z3_v = int(hashlib.sha256(v.encode()).hexdigest(), 16) % 10**8
+                else:
+                    z3_v = v
+                z3_values.append(var == z3_v)
+            return Or(z3_values)
         else:
             # Numeric constraints
             var = self._create_variable(entity, "real")
@@ -91,14 +100,33 @@ class FormalVerifier:
         constraints = manifest.get("constraints", [])
         
         # Add all constraints to solver
-        z3_constraints = []
+        # For conditional rules: Prerequisite => Constraint
+        id_to_z3 = {}
+        constraints = manifest.get("constraints", [])
+        
+        # First pass: map IDs and add non-conditional rules
         for c in constraints:
             try:
-                z3_constraint = self._constraint_to_z3(c)
-                z3_constraints.append(z3_constraint)
-                self.solver.add(z3_constraint)
+                z3_c = self._constraint_to_z3(c)
+                id_to_z3[c["id"]] = z3_c
             except Exception as e:
                 return False, f"Failed to parse constraint {c['id']}: {e}"
+                
+        # Second pass: Apply implications
+        for c in constraints:
+            z3_c = id_to_z3[c["id"]]
+            if c.get("conditional_on"):
+                # If all prerequisites pass, then this rule must also pass
+                prereqs = [id_to_z3[pid] for pid in c["conditional_on"] if pid in id_to_z3]
+                if prereqs:
+                    # Implication: And(prereqs) => z3_c
+                    # In Z3: Implies(And(prereqs), z3_c)
+                    from z3 import Implies
+                    self.solver.add(Implies(And(prereqs), z3_c))
+                else:
+                    self.solver.add(z3_c)
+            else:
+                self.solver.add(z3_c)
         
         # Check satisfiability
         result = self.solver.check()
@@ -106,8 +134,7 @@ class FormalVerifier:
         if result == sat:
             return True, None
         elif result == unsat:
-            # Get unsatisfiable core if possible
-            return False, "Manifest contains contradictory constraints (unsatisfiable)"
+            return False, "Manifest contains contradictory constraints (unsatisfiable logic path)"
         else:
             return False, "Could not determine satisfiability (timeout or unknown)"
     
@@ -139,14 +166,18 @@ class FormalVerifier:
             for entity, var in self.variables.items():
                 val = model.evaluate(var, model_completion=True)
                 # Convert Z3 value to Python
-                if hasattr(val, 'as_long'):
+                if hasattr(val, 'as_long') and val.is_int():
                     example[entity] = val.as_long()
                 elif hasattr(val, 'as_decimal'):
-                    example[entity] = float(val.as_decimal(10))
+                    example[entity] = float(val.as_decimal(10).replace("?", ""))
                 elif hasattr(val, 'is_true'):
                     example[entity] = val.is_true()
                 else:
-                    example[entity] = str(val)
+                    try:
+                        # Fallback for RatNum or other numeric types
+                        example[entity] = float(val.as_fraction().numerator) / float(val.as_fraction().denominator)
+                    except:
+                        example[entity] = str(val)
             return True, example
         else:
             return False, None
@@ -216,60 +247,36 @@ class FormalVerifier:
         else:
             return False, None
     
-    def prove_implication(
-        self,
-        manifest: Dict[str, Any],
-        given: Dict[str, Any],
-        prove: str
-    ) -> bool:
+    def detect_dead_code(self, manifest: Dict[str, Any]) -> List[str]:
         """
-        Prove that if `given` conditions hold for a valid input,
-        then `prove` must also hold.
+        Identify rules that can NEVER be met because their prerequisites 
+        and their own logic are mutually exclusive.
         
-        Example: prove_implication(manifest, {"age": "> 65"}, "priority > 5")
+        Returns:
+            List of rule IDs that are dead code.
         """
-        self.solver.reset()
-        self.variables = {}
-        
+        dead_rules = []
+        id_to_z3 = {}
         constraints = manifest.get("constraints", [])
         
-        # Add manifest constraints
+        # Build Z3 map
         for c in constraints:
-            try:
-                z3_constraint = self._constraint_to_z3(c)
-                self.solver.add(z3_constraint)
-            except Exception: # nosec B112
-                continue
-        
-        # Add given conditions
-        for entity, condition in given.items():
-            parts = condition.split()
-            if len(parts) == 2:
-                op, value = parts
-                var = self._create_variable(entity, "real")
-                val = float(value)
-                
-                if op == ">":
-                    self.solver.add(var > val)
-                elif op == "<":
-                    self.solver.add(var < val)
-        
-        # Add negation of what we want to prove
-        parts = prove.split()
-        if len(parts) == 3:
-            entity, op, value = parts
-            var = self._create_variable(entity, "real")
-            val = float(value)
+            id_to_z3[c["id"]] = self._constraint_to_z3(c)
             
-            if op == ">":
-                self.solver.add(Not(var > val))
-            elif op == "<":
-                self.solver.add(Not(var < val))
-        
-        # If UNSAT, the implication holds
-        result = self.solver.check()
-        is_unsat: bool = result == unsat
-        return is_unsat
+        for c in constraints:
+            self.solver.reset()
+            rule_z3 = id_to_z3[c["id"]]
+            prereqs = [id_to_z3[pid] for pid in c.get("conditional_on", []) if pid in id_to_z3]
+            
+            # Check if (Prerequisites AND Rule) is SAT
+            if prereqs:
+                self.solver.add(And(prereqs))
+            self.solver.add(rule_z3)
+            
+            if self.solver.check() == unsat:
+                dead_rules.append(c["id"])
+                
+        return dead_rules
 
 
 def verify_manifest_file(filepath: str) -> Dict[str, Any]:

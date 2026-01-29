@@ -1,13 +1,15 @@
 import asyncio
-from lnt_sovereign.core.monitor import SovereignMonitor
-from lnt_sovereign.core.analytics import SovereignAnalyticsEngine
-from lnt_sovereign.core.dashboard import SovereignDashboardGenerator
+
+from lnt_sovereign.core.analytics import LNTAnalyticsEngine
+from lnt_sovereign.core.dashboard import LNTDashboardGenerator
+from lnt_sovereign.core.monitor import LNTMonitor
+
 
 async def verify_analytics():
-    print("--- Sovereign Analytics Verification ---")
-    monitor = SovereignMonitor()
-    analytics = SovereignAnalyticsEngine(monitor)
-    dashboard = SovereignDashboardGenerator(output_dir="docs/metrics")
+    print("--- LNT Analytics Verification ---")
+    monitor = LNTMonitor()
+    analytics = LNTAnalyticsEngine(monitor)
+    dashboard = LNTDashboardGenerator(output_dir="docs/metrics")
 
     # Simulate 10 transactions
     for i in range(10):
@@ -33,7 +35,7 @@ async def verify_analytics():
     path = dashboard.generate_html_report(summary, heatmap)
     print(f"Visual Report Generated: {path}")
 
-    assert summary['critical_rules_triggered'] == 1
+    assert summary['rules_triggered'] == 1
     assert len(trends) == 10
     print("VERIFICATION SUCCESSFUL")
 

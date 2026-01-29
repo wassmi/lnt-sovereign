@@ -1,65 +1,71 @@
-# MLOps Integration Guide: LNT Sovereign as a Logic Gate
+# Potential for enforcing AI policies in a CI pipeline using LNT
 
-LNT Sovereign provides a deterministic verification layer for AI behavioral logic. This guide explains how to integrate it into your MLOps pipeline for automated safety and governance.
+Integrating a **Logic Gate** into your MLOps pipeline can be an effective way to help prevent safety regressions in AI deployments. This guide explores how you could use LNT to verify model behavior before it touches production.
 
-## 1. The LNT Workflow in CI/CD
+---
 
-LNT evaluates model outputs against symbolic constraints to ensure behavioral integrity.
+## The Problem: Probabilistic Drift
+As models are fine-tuned or prompts are updated, their behavior changes. Without a deterministic check, you might accidentally deploy a model that violates a core business policy (e.g., suggesting medical advice it shouldn't, or ignoring a pricing constraint).
 
-```mermaid
-graph LR
-    A[Model Training] --> B[Evaluation Set Generation]
-    B --> C[LNT Symbolic Verification]
-    C -- Pass --> D[Deploy to Production]
-    C -- Fail --> E[Developer Review / Rollback]
+## The Concept: The LNT Logic Gate
+By adding an LNT verification step to your pipeline, you create a "Hard Pass/Fail" signal based on your **Logic Manifests**.
+
+### Step 1: Define your Policy Manifest
+Create a file (e.g., `compliance_policy.json`) that defines your deterministic bounds.
+
+```json
+{
+  "domain_id": "REGULATORY_V1",
+  "constraints": [
+    {
+      "id": "MAX_DISCOUNT",
+      "entity": "discount_rate",
+      "operator": "LTE",
+      "value": 0.25,
+      "severity": "TOXIC",
+      "描述": "AI cannot suggest a discount above 25%."
+    }
+  ]
+}
 ```
 
-## 2. Integration Modes
-
-### Advisory Mode (Soft Governance)
-Use this during initial model development to observe logic drift without blocking the pipeline.
-
-```bash
-lnt check --manifest security_policy.json --input model_eval.json --advisory
-```
-
-### Enforcement Mode (Mandatory Safety)
-Use this for mission-critical deployments where violating a rule (like a regulatory constraint) is unacceptable.
-
-```bash
-# Fails the build if a 'TOXIC' rule is hit or score < 95
-lnt check --manifest compliance.json --input audit_data.json --fail-on-toxic --fail-under 95
-```
-
-## 3. GitHub Actions Integration
-
-For a complete, copy-pasteable template, see [lnt-sovereign.yml](file:///c:/Users/DELL/Desktop/ccfraude/examples/mlops/lnt-sovereign.yml). 
-
-You can also add LNT directly to your `.github/workflows/mlops.yml`:
+### Step 2: Inject LNT into your GitHub Actions
+This CI/CD snippet illustrates how you could ensure that if your evaluation dataset triggers a "TOXIC" violation, the build fails immediately.
 
 ```yaml
 jobs:
-  governance:
+  ai-governance:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
       - name: Install LNT
         run: pip install lnt-sovereign
-      - name: Run Behavioral Audit
+
+      - name: Run Deterministic Policy Audit
         run: |
-          lnt check --manifest manifests/production_policy.json \
-                    --input data/latest_eval.json \
+          # Fails if any 'TOXIC' rule is hit or the safety score < 98
+          lnt check --manifest compliance_policy.json \
+                    --input model_outputs.json \
                     --fail-on-toxic \
-                    --json-report artifacts/audit_report.json
-      - name: Archive Audit Trail
-        uses: actions/upload-artifact@v4
-        with:
-          name: sovereign-audit-trail
-          path: artifacts/audit_report.json
+                    --fail-under 98
 ```
 
-## 4. Why Use LNT in MLOps?
+---
 
-- **Audit Integrity**: Every deployment generates a SHA-256 signature-chained decision ledger.
-- **Model Verification**: Catch when a model starts producing outputs that violate established deterministic bounds.
-- **Regulatory Compliance**: Provide clear evidence that AI systems operate within defined safety manifolds.
+## Why engineers might choose LNT for pipeline verification:
+
+1.  **Clarity over Cleverness**: You don't need a "prompt engineer" to fix a failing build. You just need to look at the JSON violation report.
+2.  **Audit Integrity**: Every CI run generates a signed **Reasoning Trace**, providing immutable proof of why a model was or wasn't deployed.
+3.  **Deterministic Benchmarking**: Measure your model's "Logic Compliance" as a hard metric alongside traditional accuracy (F1, BLEU, etc.).
+
+---
+
+## Frequently Asked Questions in MLOps
+
+### Should I run this on every commit?
+Yes. Since LNT evaluation takes less than 1ms per entry, it adds minimal delay to your CI pipeline while providing safety insights.
+
+### What if my rules are complex?
+LNT supports **Implications** and **Conditional Logic**. You can define rules like: *"If 'user_region' is 'EU', then 'data_retention_days' must be '0'."* These are verified for consistency by Z3 before the pipeline runs.
+
+### How do I handle "soft" rules?
+Use the `WARNING` severity. These rules deduct from the overall safety score but don't necessarily fail the build unless the total score drops below your `--fail-under` threshold.

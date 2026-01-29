@@ -1,5 +1,7 @@
-from typing import Dict, Any, Optional
-from lnt_sovereign.core.topology import SynthesisManifold
+from typing import Any, Dict, Optional
+
+from lnt_sovereign.core.topology import TopologyOrchestrator
+
 
 class AgentMessage:
     def __init__(self, sender: str, content: str, metadata: Optional[Dict[str, Any]] = None) -> None:
@@ -24,12 +26,12 @@ class ProverAgent:
 
 class VerifierAgent:
     """
-    The 'Sovereign' auditor agent.
+    The LNT validation agent.
     Strictly bounded by the LNT Synthesis Manifold.
     """
-    def __init__(self, name: str = "VERIFIER_SOVEREIGN") -> None:
+    def __init__(self, name: str = "VERIFIER_01") -> None:
         self.name = name
-        self.manifold = SynthesisManifold()
+        self.manifold = TopologyOrchestrator()
 
     def audit(self, user_text: str, proposal: AgentMessage) -> Dict[str, Any]:
         """
@@ -38,7 +40,7 @@ class VerifierAgent:
         result = self.manifold.process_application(user_text)
         
         if result["status"] in ["APPROVED", "VERIFIED"]:
-            audit_note = "Audit Complete: Proposal matches sovereign constraints."
+            audit_note = "Audit Complete: Proposal matches logic constraints."
         else:
             audit_note = f"Audit Failed: {result['explanation']}"
             

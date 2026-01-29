@@ -1,7 +1,8 @@
-import sys
 import os
+import sys
+
 try:
-    from lnt_sovereign.core.topology import SynthesisManifold
+    from lnt_sovereign.core.topology import TopologyOrchestrator
     print("✅ Successfully imported lnt_sovereign components.")
     
     # Check if manifests are present in the installed package
@@ -30,13 +31,13 @@ try:
         sys.exit(1)
 
     print("\n--- Running Quick Smoke Test ---")
-    manifold = SynthesisManifold()
+    manifold = TopologyOrchestrator()
     # Test a known example
     res = manifold.process_application("Visa application with passport and funding.")
     print(f"Status: {res['status']}")
     print(f"Domain: {res['domain']}")
     
-    if res['status'] in ["CERTIFIED", "REJECTED_BY_SOVEREIGN_LOGIC"]:
+    if res['status'] in ["CERTIFIED", "REJECTED_BY_LOGIC"]:
         print("✅ Smoke test PASSED.")
     else:
         print(f"❌ Smoke test FAILED: Unexpected status {res['status']}")

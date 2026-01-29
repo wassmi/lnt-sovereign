@@ -1,32 +1,35 @@
-from lnt_sovereign.core.neural import NeuralParser
-from lnt_sovereign.core.kernel import KernelEngine, DomainManifest
-from lnt_sovereign.core.feedback import FeedbackFlywheel
-from lnt_sovereign.core.monitor import SovereignMonitor
-from lnt_sovereign.core.bias import BiasAuditor
-from lnt_sovereign.core.compiler import SovereignCompiler
-from lnt_sovereign.core.optimized_kernel import OptimizedKernel
-from lnt_sovereign.core.state import SovereignStateBuffer
-from lnt_sovereign.core.analytics import SovereignAnalyticsEngine
 import hashlib
 import json
 import os
 import time
-from typing import Dict, Any, List
+from typing import Any, Dict, List
 
-class SynthesisManifold:
+from lnt_sovereign.core.analytics import LNTAnalyticsEngine
+from lnt_sovereign.core.bias import BiasAuditor
+from lnt_sovereign.core.compiler import LNTCompiler
+from lnt_sovereign.core.feedback import FeedbackFlywheel
+from lnt_sovereign.core.kernel import DomainManifest, KernelEngine
+from lnt_sovereign.core.monitor import LNTMonitor
+from lnt_sovereign.core.neural import NeuralParser
+from lnt_sovereign.core.optimized_kernel import OptimizedKernel
+from lnt_sovereign.core.state import LNTStateBuffer
+from lnt_sovereign.core.telemetry import TelemetryManager
+
+
+class TopologyOrchestrator:
     """
-    The Agnostic Topology Orchestrator (Optimized).
-    Transforms LNT into a Sovereign OS by loading domain-specific Manifests.
-    Uses OptimizedKernel (BELM) for sub-microsecond decision-making.
+    Topology Orchestrator logic.
+    Manages logic evaluation by loading domain-specific Manifests.
+    Uses OptimizedKernel for logic enforcement.
     """
     def __init__(self) -> None:
-        self.state_buffer = SovereignStateBuffer()
+        self.state_buffer = LNTStateBuffer()
         self.parser: NeuralParser = NeuralParser()
         self.kernel_engine: KernelEngine = KernelEngine(state_buffer=self.state_buffer)
-        self.compiler: SovereignCompiler = SovereignCompiler()
+        self.compiler: LNTCompiler = LNTCompiler()
         self.flywheel: FeedbackFlywheel = FeedbackFlywheel()
-        self.monitor: SovereignMonitor = SovereignMonitor()
-        self.analytics = SovereignAnalyticsEngine(self.monitor)
+        self.monitor: LNTMonitor = LNTMonitor()
+        self.analytics = LNTAnalyticsEngine(self.monitor)
         self.bias_auditor: BiasAuditor = BiasAuditor()
         self._compiled_cache: Dict[str, OptimizedKernel] = {} # domain_id -> OptimizedKernel
         
@@ -36,13 +39,13 @@ class SynthesisManifold:
 
     def process_application(self, user_text: str) -> Dict[str, Any]:
         """
-        Unified Agnostic Synthesis Loop with SG-2 Temporal & Weighted Logic.
+        Unified logic loop with temporal and weighted evaluation.
         """
         # 1. Agnostic Domain Detection
         domain_key: str = self.parser.detect_domain(user_text)
         manifest_file: str = self._get_manifest_path(domain_key)
         
-        # 2. Load Manifest & Original Logic (Interpreted path for SG-2 Temporal)
+        # 2. Load Manifest & Original Logic (Interpreted path for temporal logic)
         try:
             manifest: DomainManifest = self.kernel_engine.load_manifest(manifest_file)
         except Exception as e:
@@ -51,8 +54,8 @@ class SynthesisManifold:
         # 3. Dynamic Neural Perception (Proposal)
         neural_proposal: Dict[str, Any] = self.parser.parse_intent(user_text, manifest)
 
-        # 4. Sovereign Grade Evaluation (State-Aware)
-        # We use the KernelEngine for SG-1/SG-2 features (DAGs, Weights, Temporal)
+        # 4. Logical Evaluation (State-Aware)
+        # We use the KernelEngine for core features (DAGs, Weights, Temporal)
         start_time = time.time()
         trace_result = self.kernel_engine.trace_evaluate(neural_proposal)
         latency_ms = (time.time() - start_time) * 1000.0
@@ -62,7 +65,7 @@ class SynthesisManifold:
         score: float = trace_result["score"]
         is_safe: bool = len(violations) == 0
         
-        status: str = "CERTIFIED" if is_safe else "REJECTED_BY_SOVEREIGN_LOGIC"
+        status: str = "CERTIFIED" if is_safe else "REJECTED_BY_LOGIC"
         
         # 5. Audit Proof & Metadata
         proof_data: Dict[str, Any] = {
@@ -82,6 +85,14 @@ class SynthesisManifold:
             score=score,
             violations=violations,
             latency_ms=latency_ms
+        )
+        
+        # Phase 4 Telemetry
+        TelemetryManager().log_event(
+            command="manifold_process",
+            success=is_safe,
+            latency_ms=latency_ms,
+            metadata={"domain": manifest.domain_id, "score": score}
         )
         if not is_safe:
             self.flywheel.log_rejection(manifest.domain_id, neural_proposal, violations)

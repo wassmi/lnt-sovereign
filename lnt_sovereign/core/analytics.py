@@ -1,14 +1,15 @@
-from typing import Dict, Any, List
 from collections import Counter
 from datetime import datetime
-from lnt_sovereign.core.monitor import SovereignMonitor
+from typing import Any, Dict, List
 
-class SovereignAnalyticsEngine:
+from lnt_sovereign.core.monitor import LNTMonitor
+
+
+class LNTAnalyticsEngine:
     """
-    Advanced decision analytics for the LNT engine.
-    Computes trends, frequency heatmaps, and performance distributions.
+    Decison analytics for the LNT prototype.
     """
-    def __init__(self, monitor: SovereignMonitor) -> None:
+    def __init__(self, monitor: LNTMonitor) -> None:
         self.monitor = monitor
 
     def get_score_trends(self, limit: int = 50) -> List[Dict[str, Any]]:
@@ -66,9 +67,9 @@ class SovereignAnalyticsEngine:
         top_violation = max(heatmap, key=lambda k: heatmap[k]) if heatmap else "None"
         
         return {
-            "overall_status": ops["sovereign_status"],
-            "hallucination_rate": ops["hallucination_rate"],
-            "critical_rules_triggered": len(heatmap),
+            "overall_status": ops["status"],
+            "violation_rate": ops["violation_rate"],
+            "rules_triggered": len(heatmap),
             "top_violation_id": top_violation,
             "performance": perf,
             "timestamp": datetime.now().isoformat()

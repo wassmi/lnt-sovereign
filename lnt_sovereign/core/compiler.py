@@ -1,9 +1,12 @@
+from typing import Any, Dict, List
+
 import numpy as np
-from typing import Dict, Any, List
 from pydantic import BaseModel, ConfigDict
-from lnt_sovereign.core.kernel import DomainManifest
-from lnt_sovereign.core.formal import FormalVerifier
+
 from lnt_sovereign.core.exceptions import ManifestContradictionError, TypeMismatchError
+from lnt_sovereign.core.formal import FormalVerifier
+from lnt_sovereign.core.kernel import DomainManifest
+
 
 class CompiledManifest(BaseModel):
     """
@@ -15,9 +18,10 @@ class CompiledManifest(BaseModel):
     entity_map: Dict[str, int]
     bounds: np.ndarray
     severities: np.ndarray
+    dependency_matrix: np.ndarray # Matrix [i, j] = 1 if rule j depends on rule i
     metadata: List[Dict[str, Any]]
 
-class SovereignCompiler:
+class LNTCompiler:
     """
     Compiles a high-level DomainManifest into a high-performance CompiledManifest.
     """
@@ -27,7 +31,7 @@ class SovereignCompiler:
 
     def compile(self, manifest: DomainManifest) -> CompiledManifest:
         """
-        Transforms a declarative manifest into optimized matrices for BELM execution.
+        Transforms a declarative manifest into optimized matrices for vectorized logic execution.
         If verification is enabled, uses Z3 to prove manifest consistency.
         """
         if self.verify:
@@ -43,7 +47,7 @@ class SovereignCompiler:
         severities = np.zeros(n_constraints, dtype=np.int32) # Encoding severity as int
         metadata = []
         
-        severity_map = {"TOXIC": 2, "IMPOSSIBLE": 2, "WARNING": 1}
+        severity_map = {"CRITICAL": 2, "FATAL": 2, "WARNING": 1}
         
         op_idx_map = {
             "GT": 0, "LT": 1, "EQ": 2, "GTE": 3, "LTE": 4, "RANGE": 5, "REQUIRED": 6
@@ -81,13 +85,25 @@ class SovereignCompiler:
                 "description": constraint.description,
                 "severity_label": constraint.severity,
                 "weight": constraint.weight,
-                "evidence": constraint.evidence_source
+                "evidence": constraint.evidence_source,
+                "conditional_on": constraint.conditional_on or []
             })
             
+        # Build Dependency Matrix
+        dep_matrix = np.zeros((n_constraints, n_constraints), dtype=np.bool_)
+        id_to_idx = {m["id"]: i for i, m in enumerate(metadata)}
+        
+        for i, m in enumerate(metadata):
+            for dep_id in m["conditional_on"]:
+                if dep_id in id_to_idx:
+                    dep_idx = id_to_idx[dep_id]
+                    dep_matrix[dep_idx, i] = True # i depends on dep_idx
+                    
         return CompiledManifest(
             domain_id=manifest.domain_id,
             entity_map=entity_map,
             bounds=bounds,
             severities=severities,
+            dependency_matrix=dep_matrix,
             metadata=metadata
         )

@@ -33,6 +33,7 @@ env/
 *.log
 *.sqlite
 *.db
+.lnt_state/
 audit.db
 audit_ledger.db
 flywheel_logs/

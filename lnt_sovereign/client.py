@@ -1,9 +1,10 @@
-import httpx
 import asyncio
 import logging
 import os
-from typing import Dict, Any, Optional, List, cast
 from dataclasses import dataclass
+from typing import Any, Dict, List, Optional, cast
+
+import httpx
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("LNT-SDK")
@@ -20,8 +21,8 @@ class LNTResponse:
 
 class LNTClient:
     """
-    Sovereign LNT SDK: The professional interface for Neuro-Symbolic Logic.
-    Supports asynchronous execution, local audits, and verification proofs.
+    LNT SDK: A technical interface for experimenting with Neuro-Symbolic Logic.
+    Supports asynchronous execution, local audits, and logic proofs.
     """
     def __init__(
         self, 
@@ -37,7 +38,7 @@ class LNTClient:
         self.headers: Dict[str, str] = {
             "X-LNT-API-KEY": self.api_key or "",
             "Content-Type": "application/json",
-            "User-Agent": "LNT-Python-SDK/1.0.3"
+            "User-Agent": "LNT-Python-SDK/1.1.0-alpha"
         }
         self._client: Optional[httpx.AsyncClient] = None
 
@@ -69,7 +70,7 @@ class LNTClient:
         shadow_mode: bool = False
     ) -> Dict[str, Any]:
         """
-        Remote evaluation via Sovereign Cloud.
+        Remote evaluation via an LNT service.
         """
         if not self.api_key:
             return {"status": "ERROR", "error": "api_key is required for remote evaluation."}
@@ -109,15 +110,16 @@ class LNTClient:
             manifest_id: The ID of the manifest (e.g., 'visa_application')
             proposal: The structured data to audit.
         """
-        from lnt_sovereign.core.topology import SynthesisManifold
         from dataclasses import make_dataclass
+
+        from lnt_sovereign.core.topology import TopologyOrchestrator
         
         # Simulating the local engine behavior for the 'toolbox' mode
-        manifold = SynthesisManifold()
+        manifold = TopologyOrchestrator()
         
         # Map manifest_id to domain_id if needed, or use filename directly
         # In the engine, manifest_id usually leads to a file in manifests/examples/
-        # SynthesisManifold's process_application detects domain from text, 
+        # TopologyOrchestrator's process_application detects domain from text, 
         # but for a direct 'audit' we can go straight to the kernel.
         
         manifest_path = os.path.join(manifold.manifest_dir, f"{manifest_id}.json")
@@ -166,7 +168,37 @@ class LNTClient:
 
     def verify_proof_integrity(self, result: Dict[str, Any]) -> bool:
         """
-        Validates the SHA-256 integrity of a sovereign proof.
+        Validates the SHA-256 integrity of a logic proof.
         """
         proof = result.get("proof")
         return bool(proof and len(proof) == 64)
+
+    def get_requirements(self, manifest_id: str) -> Dict[str, Any]:
+        """
+        Returns the expected entity schema for a specific manifest.
+        This provides the 'Contract' for LLM steering.
+        """
+        from lnt_sovereign.core.topology import TopologyOrchestrator
+        manifold = TopologyOrchestrator()
+        
+        manifest_path = os.path.join(manifold.manifest_dir, f"{manifest_id}.json")
+        if not os.path.exists(manifest_path):
+            manifest_path = manifold._get_manifest_path(manifest_id.upper())
+
+        try:
+            manifest = manifold.kernel_engine.load_manifest(manifest_path)
+            return {
+                "domain": manifest.domain_id,
+                "entities": manifest.entities,
+                "constraints": [
+                    {
+                        "id": c.id,
+                        "entity": c.entity,
+                        "operator": c.operator,
+                        "description": c.description
+                    } for c in manifest.constraints
+                ]
+            }
+        except Exception as e:
+            logger.error(f"Failed to fetch requirements: {str(e)}")
+            raise e

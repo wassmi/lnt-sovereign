@@ -1,8 +1,10 @@
-import time
-from lnt_sovereign.core.kernel import KernelEngine
-from lnt_sovereign.core.compiler import SovereignCompiler
-from lnt_sovereign.core.optimized_kernel import OptimizedKernel
 import os
+import time
+
+from lnt_sovereign.core.compiler import LNTCompiler
+from lnt_sovereign.core.kernel import KernelEngine
+from lnt_sovereign.core.optimized_kernel import OptimizedKernel
+
 
 def run_benchmark():
     print("--- LNT Performance Benchmark: JSON vs BELM ---")
@@ -12,7 +14,7 @@ def run_benchmark():
     kernel_engine = KernelEngine()
     raw_manifest = kernel_engine.load_manifest(manifest_path)
     
-    compiler = SovereignCompiler()
+    compiler = LNTCompiler()
     compiled = compiler.compile(raw_manifest)
     opt_kernel = OptimizedKernel(compiled)
     
@@ -86,7 +88,7 @@ def run_stress_test():
     kernel_engine = KernelEngine()
     kernel_engine.manifest = manifest
     
-    compiler = SovereignCompiler()
+    compiler = LNTCompiler()
     compiled = compiler.compile(manifest)
     opt_kernel = OptimizedKernel(compiled)
     

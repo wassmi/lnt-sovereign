@@ -1,14 +1,16 @@
+import hashlib
 import json
 import random
 import time
-import hashlib
 from datetime import datetime
-from typing import Dict, Any
+from typing import Any, Dict
+
 from lnt_sovereign.core.kernel import KernelEngine
+
 
 class AuditLogger:
     """
-    Generates AIDA-compliant (JSON-LD style) Audit Logs.
+    Generates structured Audit Logs.
     Every decision creates a verifiable 'Proof of Reasoning'.
     """
     @staticmethod
@@ -33,18 +35,18 @@ class AuditLogger:
         proof_hash = hashlib.sha256(content_to_hash.encode()).hexdigest()
 
         return {
-            "@context": "https://lnt.ai/contexts/sovereign-audit-v1.jsonld",
+            "@context": "https://lnt.ai/contexts/audit-v1.jsonld",
             "type": "ComplianceAudit",
             "timestamp": timestamp,
             "subject": hashlib.sha256(user_input.encode(), usedforsecurity=False).hexdigest()[:8], # Anonymous ID
             "manifold_decision": result["status"],
-            "sovereign_proof": f"sha256:{proof_hash}",
-            "regulatory_framework": "Bill C-27 / AIDA 2026"
+            "logic_proof": f"sha256:{proof_hash}",
+            "regulatory_framework": "Experimental Validation"
         }
 
 class ScaleTester:
     """
-    Simulates high-volume 'Sovereign Traffic' to verify engine performance.
+    Simulates high-volume traffic to verify engine performance.
     """
     def __init__(self, iterations: int = 100) -> None:
         self.iterations = iterations

@@ -1,5 +1,7 @@
 import json
+
 from typer.testing import CliRunner
+
 from lnt_sovereign.cli import app
 
 runner = CliRunner()
@@ -7,7 +9,7 @@ runner = CliRunner()
 def test_cli_version():
     result = runner.invoke(app, ["version"])
     assert result.exit_code == 0
-    assert "LNT Sovereign" in result.stdout
+    assert "LNT" in result.stdout
 
 def test_cli_check_advisory(tmp_path):
     # Create mock manifest and input

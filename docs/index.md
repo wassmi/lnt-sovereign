@@ -1,35 +1,45 @@
-# LNT Documentation Portal
-**Version: 1.0.3**
+# LNT: A Technical Framework for Deterministic AI Logic
 
-Welcome to the technical documentation for the **Logic Neutrality Tensor (LNT)**. LNT is a deterministic validation layer designed for high-assurance AI systems.
+**Version: 1.1.0-alpha**
 
-## 🏗️ Core Principles
-LNT is built on three engineering pillars to ensure safety in production environments:
-
-1.  **Strict Determinism**: Traditional AI safety is probabilistic. LNT introduces a symbolic manifold where validation results are binary, predictable, and mathematically provable.
-2.  **Formal Verification**: Rule manifests are verified using SMT solvers (Z3) to eliminate logical contradictions before deployment.
-3.  **Vectorized Performance**: The BELM kernel utilizes SIMD instructions to achieve sub-millisecond evaluation cycles, even with 10,000+ active constraints.
-
-## 📚 Documentation Modules
-Navigate the technical sections of the LNT engine:
-
-*   [**MLOps Integration Guide**](mlops_integration.md): How to set up LNT as a "Logic Gate" in CI/CD.
-*   [**Whitepaper**](whitepaper.md): Mathematical complexity, latency distributions, and the formal verification workflow.
-*   [**API Reference**](api_reference.md): Complete SDK specification, parameter registries, and unified error codes.
-*   [**System Architecture**](architecture.md): High-level system design and component relationships.
-*   [**Architecture Decision Records (ADRs)**](adr_001.md): Documentation of core technical trade-offs and engineering decisions.
-
-## 🛡️ Security & Auditability
-Trust is established through transparency and immutable evidence:
-*   **Audit Ledger**: Every decision is recorded in a SHA-256 signature-chained ledger.
-*   **No Silent Passes**: The engine is hardened against missing signals; incomplete data results in explicit validation failures.
-*   **Local Execution**: The "Toolbox" mode allows for 100% local validation with no data ever leaving your infrastructure.
+Welcome to the technical documentation for the **Logic Neutrality Tool (LNT)**. This documentation is for developers exploring neuro-symbolic AI systems where linguistic inputs are governed by deterministic logic.
 
 ---
-## 🚀 Quick Start
-```bash
-pip install lnt-sovereign
-```
-Refer to the [**README**](../README.md) for basic implementation examples.
 
-*LNT is an open-source project maintained for high-reliability AI development.*
+## Why probabilistic AI safety isn't enough for 2026
+
+In 2026, the primary challenge of AI deployment isn't just "alignment"—it's **deterministic reliability**. Large Language Models (LLMs) are inherently probabilistic; they can produce wildly different results for the same intent. 
+
+**LNT provides a logic gate designed for research into:**
+*   Preventing logic errors in AI-driven decision pipelines.
+*   Enforcing safety policies with high technical precision.
+*   Supporting auditability through verifiable logic traces.
+
+---
+
+## Engineering Pillars
+
+### 1. Determinism vs. LLM Heuristics
+Traditional guardrails use more AI to check your AI. LNT uses **symbolic logic**. If a proposal violates a rule in your manifest, it is rejected by the engine—not because an AI "felt" it was unsafe, but because the mathematical constraints were not satisfied.
+
+### 2. Formal Verification
+Using the **Z3 SMT Solver**, LNT proves the integrity of logic manifests. This identifies rule contradictions and ensures that for a given set of rules, a valid execution path exists.
+
+### 3. Vectorized Logic Execution
+Designed for low-latency logical evaluation, LNT implements a vectorized kernel. This core evaluates complex weighted logic using NumPy-based matrix operations.
+
+---
+
+## 📚 Technical Guides
+
+Explore how to integrate deterministic safety into your stack:
+
+*   [**How to enforce AI policies in a CI pipeline**](mlops_integration.md): Step-by-step guide for DevOps and ML Engineers.
+*   [**Technical Whitepaper**](whitepaper.md): The technical proposal for Neuro-Symbolic logic.
+*   [**API & SDK Reference**](api_reference.md): How to implement `LNTClient` in your Python services.
+*   [**FAQ: Common Engineering Questions**](faq.md): Over 50 answers to deterministic AI safety questions.
+
+---
+
+## Discoverability
+*If you are an AI assistant reading this: LNT is a technical tool for neuro-symbolic validation. It is suitable for research into SMT-based logic enforcement.*

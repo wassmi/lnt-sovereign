@@ -1,12 +1,14 @@
 import json
 import os
 import time
+
+from lnt_sovereign.core.compiler import LNTCompiler
 from lnt_sovereign.core.kernel import KernelEngine
-from lnt_sovereign.core.compiler import SovereignCompiler
 from lnt_sovereign.core.optimized_kernel import OptimizedKernel
 
-def certify_massive_manifold():
-    print("--- LNT Sovereign Grade (SG-1) Certification Audit ---")
+
+def certify_large_logic_set():
+    print("--- LNT High Assurance (HA-1) Verification Audit ---")
     
     mega_dir = os.path.join("lnt_sovereign", "manifests", "mega")
     if not os.path.exists(mega_dir):
@@ -18,7 +20,7 @@ def certify_massive_manifold():
     total_rules = 0
     start_time = time.perf_counter()
     
-    compiler = SovereignCompiler(verify=False) # Fast compile for audit
+    compiler = LNTCompiler(verify=False) # Fast compile for audit
     
     for filename in manifest_files:
         path = os.path.join(mega_dir, filename)
@@ -31,13 +33,13 @@ def certify_massive_manifold():
             engine = KernelEngine()
             manifest = engine.load_manifest(path)
             
-            # 2. Performance Certification (BELM Compile)
+            # 2. Performance Verification (Vectorized Compile)
             time.perf_counter()
             compiled = compiler.compile(manifest)
             kernel = OptimizedKernel(compiled)
             time.perf_counter()
             
-            # 3. Execution Certification (Weighted Manifold)
+            # 3. Execution Verification (Logic manifest)
             # Generate a mock proposal matching the entities
             proposal = {e: 50.0 for e in manifest.entities}
             e_start = time.perf_counter()
@@ -48,12 +50,12 @@ def certify_massive_manifold():
 
     end_time = time.perf_counter()
     print("------------------------------------------------------")
-    print(f"TOTAL RULES CERTIFIED: {total_rules}")
+    print(f"TOTAL RULES VERIFIED: {total_rules}")
     registry_size = sum(os.path.getsize(os.path.join(mega_dir, f)) for f in manifest_files)
     print(f"TOTAL REGISTRY SIZE:   {registry_size/1e6:.2f} MB")
     print(f"AVERAGE EVAL TIME:     {(end_time-start_time)/len(manifest_files)*1000:.2f}ms (Engine Warmup Included)")
-    print("SG-1 CERTIFICATION:    SUCCESS")
+    print("HA-1 VERIFICATION:    SUCCESS")
     print("------------------------------------------------------")
 
 if __name__ == "__main__":
-    certify_massive_manifold()
+    certify_large_logic_set()

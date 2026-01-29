@@ -1,12 +1,17 @@
-from typing import List, Dict, Any, Optional
-from pydantic import BaseModel, ConfigDict, field_validator
-from enum import Enum
 import json
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
+from pydantic import BaseModel, ConfigDict, field_validator
+
 from lnt_sovereign.core.exceptions import EvaluationError
+
 
 class ConstraintOperator(str, Enum):
     GT = "GT"
     LT = "LT"
+    GTE = "GTE"
+    LTE = "LTE"
     EQ = "EQ"
     IN = "IN"
     NIN = "NIN"
@@ -21,8 +26,8 @@ class ManifestConstraint(BaseModel):
     operator: ConstraintOperator
     value: Any
     description: str
-    severity: str = "TOXIC"  # TOXIC, IMPOSSIBLE, WARNING
-    weight: float = 1.0     # 0.0 to 1.0 for weighted manifolds
+    severity: str = "CRITICAL"  # CRITICAL, FATAL, WARNING
+    weight: float = 1.0     # 0.0 to 1.0 for weighted manifests
     conditional_on: Optional[List[str]] = None # IDs of prerequisite rules
     temporal_window: Optional[str] = None      # e.g., '30d', '500ms'
     evidence_source: Optional[str] = None
@@ -71,7 +76,7 @@ class KernelEngine:
 
     def trace_evaluate(self, proposal: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Sovereign Grade (SG-1) evaluation.
+        Deterministic Logic (DL-1) evaluation.
         Executes logic based on DAG dependencies and calculates weighted score.
         """
         if not self.manifest:
@@ -86,6 +91,11 @@ class KernelEngine:
         total_weight = sum(c.weight for c in self.manifest.constraints)
         deducted_weight = 0.0
 
+        # Track un-governed signals (Flexibility Feature)
+        manifest_entities = set(self.manifest.entities)
+        proposal_entities = set(proposal.keys())
+        un_governed = proposal_entities - manifest_entities
+
         for constraint in self.manifest.constraints:
             # 0. Dependency Check (DAG Pruning)
             if constraint.conditional_on:
@@ -95,7 +105,7 @@ class KernelEngine:
 
             entity_val = proposal.get(constraint.entity)
             
-            # 1. State Persistence (SG-2)
+            # 1. State Persistence (Level 2)
             if self.state_buffer and entity_val is not None:
                 try:
                     self.state_buffer.push(constraint.entity, float(entity_val))
@@ -133,6 +143,16 @@ class KernelEngine:
                     if not (actual_val < constraint.value):
                         is_violation = True
                         msg = f"Value {actual_val} not less than {constraint.value}"
+
+                elif constraint.operator == ConstraintOperator.GTE:
+                    if not (actual_val >= constraint.value):
+                        is_violation = True
+                        msg = f"Value {actual_val} not greater than or equal to {constraint.value}"
+
+                elif constraint.operator == ConstraintOperator.LTE:
+                    if not (actual_val <= constraint.value):
+                        is_violation = True
+                        msg = f"Value {actual_val} not less than or equal to {constraint.value}"
                 
                 elif constraint.operator == ConstraintOperator.EQ:
                     if not (actual_val == constraint.value):
@@ -164,7 +184,7 @@ class KernelEngine:
                 passes.append(constraint.id)
                 results_map[constraint.id] = True
 
-        # Calculate Manifold Score (0-100)
+        # Calculate Logic Health Score (0-100)
         score = max(0.0, 100.0 * (1.0 - (deducted_weight / total_weight))) if total_weight > 0 else 100.0
         
         status = "CERTIFIED" if not violations else "REJECTED"
@@ -172,7 +192,8 @@ class KernelEngine:
             "status": status,
             "violations": violations,
             "passes": passes,
-            "score": round(score, 2)
+            "score": round(score, 2),
+            "un_governed_signals": list(un_governed)
         }
 
     def _create_violation(self, constraint: ManifestConstraint, msg: str) -> Dict[str, Any]:
@@ -187,5 +208,5 @@ class KernelEngine:
         }
 
     def is_safe(self, violations: List[Dict[str, Any]]) -> bool:
-        """Determines if the violations permit a safe action (no TOXIC/IMPOSSIBLE)."""
-        return not any(v["severity"] in ["TOXIC", "IMPOSSIBLE"] for v in violations)
+        """Determines if the violations permit a safe action (no CRITICAL/FATAL)."""
+        return not any(v["severity"] in ["CRITICAL", "FATAL"] for v in violations)

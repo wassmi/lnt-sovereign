@@ -2,7 +2,7 @@
 
 ## `LNTClient` (The SDK)
 
-The primary interface for users to interact with the Sovereign Engine.
+The primary interface for users to interact with the LNT Engine.
 
 ### `evaluate(user_text, shadow_mode=False)`
 Evaluates a proposal against the detecting domain.

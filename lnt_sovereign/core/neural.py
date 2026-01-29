@@ -1,5 +1,7 @@
-from typing import Dict, Any, List
+from typing import Any, Dict, List
+
 from lnt_sovereign.core.kernel import DomainManifest
+
 
 class NeuralParser:
     """
@@ -26,50 +28,25 @@ class NeuralParser:
 
     def parse_intent(self, user_text: str, manifest: DomainManifest) -> Dict[str, Any]:
         """
-        Extracts entities from user text.
-        Mock implementation designed for deterministic test passes.
+        Structural Adapter: Maps unstructured text to manifest entities.
+        Uses local NanoNER for semantic extraction with a heuristic fallback.
         """
-        proposal: Dict[str, Any] = {}
-        text = user_text.lower()
+        from lnt_sovereign.core.nano_inference import NanoNER
         
+        # 1. Attempt Semantic Extraction using local NanoNER
+        nano = NanoNER()
+        proposal = nano.extract_entities(user_text, manifest.entities)
+        
+        # 2. Heuristic Fallback for missing entities
+        text = user_text.lower()
         for entity in manifest.entities:
-            # Default success values (Mock neural 'steering' towards valid space)
-            if "has" in entity or "valid" in entity:
-                proposal[entity] = True
-            elif "heart_rate" in entity:
-                proposal[entity] = 72.0
-            elif "oxygen_saturation" in entity:
-                proposal[entity] = 98.0
-            elif "funding" in entity:
-                proposal[entity] = 25000.0
-            elif "proficiency" in entity or "clb" in entity:
-                proposal[entity] = 8.0
-            elif "systolic" in entity:
-                proposal[entity] = 120.0
-            elif "diastolic" in entity:
-                proposal[entity] = 80.0
-            elif "glucose" in entity:
-                proposal[entity] = 90.0
-            elif "commitment" in entity:
-                proposal[entity] = True
-            else:
-                proposal[entity] = 1.0 # Safe default
+            if entity not in proposal:
+                if entity in text:
+                    import re
+                    matches = re.findall(rf"{entity}\D*(\d+\.?\d*)", text)
+                    if matches:
+                        proposal[entity] = float(matches[0])
             
-            # Heuristic overrides for failure testing
-            if "rejected" in text or "risk" in text:
-                if "funding" in entity:
-                    proposal[entity] = 100.0
-                if "oxygen_saturation" in entity:
-                    proposal[entity] = 80.0
-                if "heart_rate" in entity:
-                    proposal[entity] = 200.0
-                if "has" in entity:
-                    proposal[entity] = False
-                if "age" in entity:
-                    proposal[entity] = 50.0 # triggers LT 45
-                if "proficiency" in entity or "clb" in entity:
-                    proposal[entity] = 2.0 # triggers GT 6
-                
         return proposal
 
     def generate_explanation(self, violations: List[Dict[str, Any]], domain: str) -> str:

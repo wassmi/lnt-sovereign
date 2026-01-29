@@ -1,7 +1,9 @@
-import numpy as np
-from numba import jit, prange, float64, int64, boolean
-from typing import Dict, Any, List
 import time
+from typing import Any, Dict, List
+
+import numpy as np
+from numba import boolean, float64, int64, jit, prange
+
 from lnt_sovereign.core.compiler import CompiledManifest
 
 # Operator codes for JIT signatures (Fixed constants for compiled stability)

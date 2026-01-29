@@ -1,8 +1,9 @@
-from typing import Dict, Any, List, Deque, Optional
 import time
 from collections import deque
+from typing import Any, Deque, Dict, List, Optional
 
-class SovereignMonitor:
+
+class LNTMonitor:
     """
     Tracks the health and compliance of the LNT engine.
     Measures the 'Reasoning Gap' between Neural and Symbolic layers.
@@ -60,5 +61,5 @@ class SovereignMonitor:
             "hallucination_rate": f"{self.hallucination_rate:.2f}%",
             "avg_latency": f"{self.avg_latency:.2f}ms",
             "uptime": "100.00%",
-            "sovereign_status": "COMPLIANT" if self.hallucination_rate < 50 else "DEGRADED"
+            "status": "COMPLIANT" if self.hallucination_rate < 50 else "DEGRADED"
         }
