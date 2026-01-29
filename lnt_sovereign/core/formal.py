@@ -208,7 +208,7 @@ class FormalVerifier:
             try:
                 z3_constraint = self._constraint_to_z3(c)
                 self.solver.add(z3_constraint)
-            except Exception: # nosec B112
+            except Exception:  # noqa: S112
                 continue
         
         # Add NEGATION of safety property
